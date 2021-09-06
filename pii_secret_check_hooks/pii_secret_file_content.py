@@ -33,7 +33,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     exit_code = 0
 
-    excluded_filenames = get_excluded_filenames(args.exclude)
+    excluded_filenames = get_excluded_filenames(args.exclude[0])
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
