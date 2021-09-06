@@ -6,7 +6,7 @@ repos:
         files: ''
         language: python
         pass_filenames: true
-    -   id: pii_secret_filecontent
+    -   id: pii_secret_file_content
         files: ''
         language: python
         pass_filenames: true
