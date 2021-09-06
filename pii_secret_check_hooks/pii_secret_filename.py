@@ -16,8 +16,9 @@ def main(argv=None):
     parser.add_argument("filenames", nargs="*", help="Files to check")
     parser.add_argument(
         "exclude",
-        nargs=".pii-secret-exclude",
-        help="List of files to exclude",
+        nargs=1,
+        default=".pii-secret-exclude",
+        help="Exclude file path",
     )
     args = parser.parse_args(argv)
 
