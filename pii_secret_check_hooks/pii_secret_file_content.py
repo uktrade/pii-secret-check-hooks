@@ -3,7 +3,7 @@ import re
 
 from pii_secret_check_hooks.util import get_excluded_filenames, get_regex
 
-from truffleHogRegexes.regexChecks import trufflehog_regexes
+from truffleHogRegexes.regexChecks import regexes as trufflehog_regexes
 
 
 def trufflehog_detect_secret_in_line(line_to_check):

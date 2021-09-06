@@ -1,6 +1,6 @@
 import requests
 import sys
-from setup import setup
+from pii_secret_check_hooks.setup import setup
 
 
 def check_release_version_from_remote_repo():

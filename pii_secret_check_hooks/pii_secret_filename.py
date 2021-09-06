@@ -24,7 +24,7 @@ def main(argv=None):
     exit_code = 0
 
     excluded_filenames = get_excluded_filenames(args.exclude)
-    file_name_regex = get_regex("file_names.txt")
+    file_name_regex = get_regex("filenames.txt")
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
