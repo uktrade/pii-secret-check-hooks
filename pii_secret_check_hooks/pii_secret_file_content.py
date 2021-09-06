@@ -35,7 +35,7 @@ def entropy_check(line):
 def truffle_hog_detect_secret_in_line(line_to_check):
     for key, regex in trufflehog_regexes.items():
         if re.search(regex, line_to_check):
-            return regex
+            return key
 
     if entropy_check(line_to_check):
         return "'entropy check failed'"
