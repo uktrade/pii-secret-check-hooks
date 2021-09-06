@@ -6,6 +6,9 @@ from pii_secret_check_hooks.util import get_excluded_filenames, get_regex
 from truffleHogRegexes.regexChecks import regexes as trufflehog_regexes
 
 
+PII_REGEX = get_regex("pii.txt")
+
+
 def trufflehog_detect_secret_in_line(line_to_check):
     for regex in trufflehog_regexes:
         if re.search(regex, line_to_check):
@@ -13,9 +16,7 @@ def trufflehog_detect_secret_in_line(line_to_check):
 
 
 def pii_in_line(line_to_check):
-    pii_regex = get_regex("pii.txt")
-
-    for regex in pii_regex:
+    for regex in PII_REGEX:
         if re.search(regex, line_to_check):
             return regex
 
@@ -41,6 +42,8 @@ def main(argv=None):
                     if "#PS-IGNORE":
                         continue
                     rule = trufflehog_detect_secret_in_line(line, filename)
+                    if not rule:
+                        rule = pii_in_line(line, filename)
                     if rule:
                         print(
                             "Potentially sensitive string matching rule: {rule} found on line {line_number} of {file}".format(
