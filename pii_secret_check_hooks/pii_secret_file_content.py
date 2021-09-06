@@ -10,7 +10,7 @@ PII_REGEX = get_regex("pii.txt")
 
 
 def trufflehog_detect_secret_in_line(line_to_check):
-    for regex in trufflehog_regexes:
+    for key, regex in trufflehog_regexes.items():
         if re.search(regex, line_to_check):
             return regex
 
