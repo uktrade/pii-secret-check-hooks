@@ -1,0 +1,17 @@
+-   id: pii_secret_filename
+    name: Check filenames for potential secrets
+    description: 'Check filenames for potential secrets'
+    language: python
+    entry: pii-secret-filename
+
+-   id: pii_secret_file_content
+    name: Check file content for potential secrets
+    description: 'Check file content for potential secrets'
+    language: python
+    entry: pii-secret-file-content
+
+    -   id: hooks_version_check
+    name: Check repository version
+    description: 'Check repository version'
+    language: python
+    entry: pii-secret-file-version-check
