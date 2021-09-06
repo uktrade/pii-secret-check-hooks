@@ -1,7 +1,7 @@
 import argparse
 import re
 
-from util import get_excluded_filenames, get_regex
+from pii_secret_check_hooks.util import get_excluded_filenames, get_regex
 
 from truffleHogRegexes.regexChecks import trufflehog_regexes
 
