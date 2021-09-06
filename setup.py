@@ -17,9 +17,9 @@ setup(
     long_description=read("README.md"),
     entry_points={
         "console_scripts": [
-            "pii-secret-file-content = security_git_hooks.secrets_filecontent:main",
-            "pii-secret-filename = security_git_hooks.secrets_filename:main",
-            "pii-secret-file-version-check = security_git_hooks.hooks_version_check:main",
+            "pii-secret-file-content = pii_secret_check_hooks.pii_secret_file_content:main",
+            "pii-secret-filename = pii_secret_check_hooks.pii_secret_filename:main",
+            "pii-secret-file-version-check = pii_secret_check_hooks.hooks_version_check:main",
         ]
     },
     packages=find_packages(),
