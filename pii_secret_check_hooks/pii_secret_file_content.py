@@ -72,7 +72,7 @@ def main(argv=None):
                     if "#PS-IGNORE" in line:
                         continue
 
-                    rule = truffle_hog_detect_secret_in_line(line, filename)
+                    rule = truffle_hog_detect_secret_in_line(line)
 
                     if not rule:
                         rule = pii_in_line(line, filename)
