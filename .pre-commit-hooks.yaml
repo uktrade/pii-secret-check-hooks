@@ -10,7 +10,7 @@
     language: python
     entry: pii-secret-file-content
 
-    -   id: hooks_version_check
+-   id: hooks_version_check
     name: Check repository version
     description: 'Check repository version'
     language: python
