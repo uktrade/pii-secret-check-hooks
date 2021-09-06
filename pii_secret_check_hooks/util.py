@@ -4,7 +4,7 @@ from pathlib import Path
 def get_excluded_filenames(file_path):
     exclude_file = Path(file_path)
     if not exclude_file.is_file():
-        print(f"Could not find path {file_path}")
+        print(f"Could not find path {file_path}", flush=True)
         return []
 
     exclude_file_names = []
@@ -20,7 +20,7 @@ def get_excluded_filenames(file_path):
 def get_regex(file_path):
     regex_file = Path(file_path)
     if not regex_file.is_file():
-        print(f"Could not find path {file_path}")
+        print(f"Could not find path {file_path}", flush=True)
         return []
 
     regex = []
