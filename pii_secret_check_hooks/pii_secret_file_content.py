@@ -75,7 +75,7 @@ def main(argv=None):
                     rule = truffle_hog_detect_secret_in_line(line)
 
                     if not rule:
-                        rule = pii_in_line(line, filename)
+                        rule = pii_in_line(line)
                     if rule:
                         print(
                             "Potentially sensitive string matching rule: {rule} found on line {line_number} of {file}".format(
