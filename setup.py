@@ -23,6 +23,6 @@ setup(
         ]
     },
     packages=find_packages(),
-    install_requires=["truffleHogRegexes", "requests", "truffleHog",],
+    install_requires=["truffleHogRegexes", "requests", "truffleHog", ],
     tests_require=["pytest"],
 )

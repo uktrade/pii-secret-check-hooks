@@ -69,9 +69,11 @@ def main(argv=None):
         if filename not in excluded_filenames:
             with open(filename, "r") as f:
                 for i, line in enumerate(f):
-                    if "#PS-IGNORE":
+                    if "#PS-IGNORE" in line:
                         continue
+
                     rule = truffle_hog_detect_secret_in_line(line, filename)
+
                     if not rule:
                         rule = pii_in_line(line, filename)
                     if rule:
