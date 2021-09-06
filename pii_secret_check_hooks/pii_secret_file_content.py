@@ -4,21 +4,51 @@ import re
 from pii_secret_check_hooks.util import get_excluded_filenames, get_regex
 
 from truffleHogRegexes.regexChecks import regexes as trufflehog_regexes
+from truffleHog.truffleHog import (
+    get_strings_of_set,
+    BASE64_CHARS,
+    HEX_CHARS,
+    shannon_entropy,
+)
 
 
 PII_REGEX = get_regex("pii.txt")
 
 
-def trufflehog_detect_secret_in_line(line_to_check):
+def entropy_check(line):
+    strings_found = []
+    for word in line.split():
+        base64_strings = get_strings_of_set(word, BASE64_CHARS)
+        hex_strings = get_strings_of_set(word, HEX_CHARS)
+        for string in base64_strings:
+            b64_entropy = shannon_entropy(string, BASE64_CHARS)
+            if b64_entropy > 4.5:
+                strings_found.append(string)
+        for string in hex_strings:
+            hex_entropy = shannon_entropy(string, HEX_CHARS)
+            if hex_entropy > 3:
+                strings_found.append(string)
+
+    return len(strings_found) > 0
+
+
+def truffle_hog_detect_secret_in_line(line_to_check):
     for key, regex in trufflehog_regexes.items():
         if re.search(regex, line_to_check):
             return regex
+
+    if entropy_check(line_to_check):
+        return "'entropy check failed'"
 
 
 def pii_in_line(line_to_check):
     for regex in PII_REGEX:
         if re.search(regex, line_to_check):
             return regex
+
+
+def regex_check():
+    pass
 
 
 def main(argv=None):
@@ -41,7 +71,7 @@ def main(argv=None):
                 for i, line in enumerate(f):
                     if "#PS-IGNORE":
                         continue
-                    rule = trufflehog_detect_secret_in_line(line, filename)
+                    rule = truffle_hog_detect_secret_in_line(line, filename)
                     if not rule:
                         rule = pii_in_line(line, filename)
                     if rule:
