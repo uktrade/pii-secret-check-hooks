@@ -47,14 +47,14 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
             if re.search(regex, line_to_check):
                 return pii_key
         except re.error as ex:
-            logging.error(ex)
+            logging.error(f"PII regex error for {pii_key} regex: '{ex}'")
 
     for custom_regex in custom_regex:
         try:
             if re.search(custom_regex, line_to_check):
                 return regex
         except re.error as ex:
-            logging.error(ex)
+            logging.error(f"Custom regex error for '{custom_regex}' regex: '{ex}'")
 
     return None
 
