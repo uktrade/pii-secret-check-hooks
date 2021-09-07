@@ -5,3 +5,13 @@ PII (Personal Identifiable Information) and secret check hooks for pre-commit
 
 file name list - '.pii-secret-exclude'
 comment exclude line
+
+TODO
+
+PII file and line level
+
+Exclude file
+
+Tidy up
+
+Tests

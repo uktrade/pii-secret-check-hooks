@@ -1,8 +1,6 @@
 import argparse
 import re
 
-from pii_secret_check_hooks.util import get_excluded_filenames, get_regex
-
 from truffleHogRegexes.regexChecks import regexes as trufflehog_regexes
 from truffleHog.truffleHog import (
     get_strings_of_set,
@@ -11,8 +9,11 @@ from truffleHog.truffleHog import (
     shannon_entropy,
 )
 
-
-PII_REGEX = get_regex("pii.txt")
+from pii_secret_check_hooks.config import pii_regex
+from pii_secret_check_hooks.util import (
+    get_regex_from_file,
+    get_excluded_filenames,
+)
 
 
 def entropy_check(line):
@@ -32,23 +33,23 @@ def entropy_check(line):
     return len(strings_found) > 0
 
 
-def truffle_hog_detect_secret_in_line(line_to_check):
-    for key, regex in trufflehog_regexes.items():
-        if re.search(regex, line_to_check):
-            return key
+def detect_pii_or_secret_in_line(line_to_check, custom_regex):
+    for trufflehog_key, trufflehog_regex in trufflehog_regexes.items():
+        if re.search(trufflehog_regex, line_to_check):
+            return trufflehog_key
 
     if entropy_check(line_to_check):
         return "'entropy check failed'"
 
-
-def pii_in_line(line_to_check):
-    for regex in PII_REGEX:
+    for pii_key, regex in pii_regex.items():
         if re.search(regex, line_to_check):
+            return pii_key
+
+    for custom_regex in custom_regex:
+        if re.search(custom_regex, line_to_check):
             return regex
 
-
-def regex_check():
-    pass
+    return None
 
 
 def main(argv=None):
@@ -60,10 +61,17 @@ def main(argv=None):
         default=".pii-secret-exclude",
         help="Exclude file path",
     )
+    parser.add_argument(
+        "regex_file",
+        nargs=1,
+        default=".pii-custom-regex",
+        help="File with custom regex (one per line)",
+    )
     args = parser.parse_args(argv)
     exit_code = 0
 
     excluded_filenames = get_excluded_filenames(args.exclude[0])
+    custom_regex = get_regex_from_file(args.regex_file[0])
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
@@ -72,10 +80,8 @@ def main(argv=None):
                     if "#PS-IGNORE" in line:
                         continue
 
-                    rule = truffle_hog_detect_secret_in_line(line)
+                    rule = detect_pii_or_secret_in_line(line, custom_regex)
 
-                    if not rule:
-                        rule = pii_in_line(line)
                     if rule:
                         print(
                             "Potentially sensitive string matching rule: {rule} found on line {line_number} of {file}".format(

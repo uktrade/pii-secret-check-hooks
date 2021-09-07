@@ -1,34 +1,30 @@
+import logging
 from pathlib import Path
 
 
-def get_excluded_filenames(file_path):
-    exclude_file = Path(file_path)
-    if not exclude_file.is_file():
-        print(f"Could not find path {file_path}", flush=True)
+def _get_file_content_as_list(file_path, file_type):
+    file = Path(file_path)
+    if not file.is_file():
+        logging.info(f"No {file_type} file found in path {file_path}")
         return []
 
-    exclude_file_names = []
+    logging.info(f"Found {file_type} file '{file_path}'")
+
+    lines = []
 
     with open(file_path, "r") as exclude_file:
         for line in exclude_file:
             stripped_line = line.strip()
-            exclude_file_names.append(stripped_line)
+            lines.append(stripped_line)
 
-    return exclude_file_names
+    logging.info(f"Found {len(lines)} files in {file_type} file")
+
+    return lines
 
 
-def get_regex(file_path):
-    regex_file = Path(file_path)
-    if not regex_file.is_file():
-        print(f"Could not find path {file_path}", flush=True)
-        return []
+def get_regex_from_file(file_path):
+    return _get_file_content_as_list(file_path, "custom regex")
 
-    regex = []
-    with open(file_path, "r") as regex_file:
-        for line in regex_file:
-            stripped_line = line.strip()
-            # Check for comment
-            if not stripped_line.strip().startswith("#"):
-                regex.append(stripped_line)
 
-    return regex
+def get_excluded_filenames(file_path):
+    return _get_file_content_as_list(file_path, "exclude")
