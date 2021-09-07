@@ -4,12 +4,6 @@ import yaml
 import sys
 
 
-"""This hook checks the security-git-hooks release contained in .pre-commit-config.yaml against
- the latest release from https://github.com/uktrade/pii-secret-check-hooks. It is an information only 
- hook, and will always pass as to prevent the interruption of workflow, however it will produce 
- output to advise when a new release is available"""
-
-
 def check_release_version_from_config(pre_commit_config_yaml):
     """checks the pre-commit-config.yaml in the current directory and returns the release tag detailed there"""
     try:
@@ -39,6 +33,7 @@ def main():
         latest_release = check_release_version_from_remote_repo()
         if config_version == latest_release:
             print("All DIT PII and DIT security hooks are up to date")
+            return 0
         else:
             print(
                 "Your pii-secret-check-hooks version is {yours} and latest is {latest}."
@@ -54,8 +49,8 @@ def main():
                 error=e
             )
         )
-    finally:
-        return 0
+
+    return 1
 
 
 if __name__ == "__main__":
