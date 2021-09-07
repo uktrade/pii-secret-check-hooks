@@ -48,6 +48,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
                 return pii_key
         except re.error as ex:
             logging.error(f"PII regex error for {pii_key} regex: '{ex}'")
+            return None
 
     for custom_regex in custom_regex:
         try:
@@ -55,6 +56,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
                 return regex
         except re.error as ex:
             logging.error(f"Custom regex error for '{custom_regex}' regex: '{ex}'")
+            return None
 
     return None
 
