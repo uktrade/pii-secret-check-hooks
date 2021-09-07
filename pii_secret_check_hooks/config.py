@@ -1,3 +1,5 @@
+repo_url = "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
+
 filename_regex = [
    # Databases
    "\.backup$",
