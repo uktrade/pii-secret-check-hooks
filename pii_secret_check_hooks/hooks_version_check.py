@@ -6,25 +6,18 @@ import sys
 
 def check_release_version_from_config(pre_commit_config_yaml):
     """checks the pre-commit-config.yaml in the current directory and returns the release tag detailed there"""
-    try:
-        with open(pre_commit_config_yaml, "r") as file:
-            config = yaml.safe_load(file)
-            res = filter(lambda x: "security-git-hooks" in x["repo"], config["repos"])
-            return next(res)["rev"]
-    except:
-        raise Exception("Local checks failed")
+    with open(pre_commit_config_yaml, "r") as file:
+        config = yaml.safe_load(file)
+        res = filter(lambda x: "security-git-hooks" in x["repo"], config["repos"])
+        return next(res)["rev"]
 
 
 def check_release_version_from_remote_repo():
-    """checks the GitHub API and returns the latest release tag detailed there"""
-    try:
-        req = requests.get(
-            "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
-        )
-        content = req.json()
-        return content["tag_name"]
-    except:
-        raise Exception("Remote checks failed")
+    req = requests.get(
+        "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
+    )
+    content = req.json()
+    return content["tag_name"]
 
 
 def main():
@@ -32,15 +25,16 @@ def main():
         config_version = check_release_version_from_config(".pre-commit-config.yaml")
         latest_release = check_release_version_from_remote_repo()
         if config_version == latest_release:
-            print("All DIT PII and DIT security hooks are up to date")
+            logging.info("All DIT PII and DIT security hooks are up to date")
             return 0
         else:
-            print(
+            logging.info(
                 "Your pii-secret-check-hooks version is {yours} and latest is {latest}."
                 ' Please run the following command in this directory: "pre-commit autoupdate"'.format(
                     yours=config_version, latest=latest_release
                 )
             )
+            return 1
 
     except Exception as e:
         logging.error(
@@ -49,8 +43,7 @@ def main():
                 error=e
             )
         )
-
-    return 1
+        return 1
 
 
 if __name__ == "__main__":
