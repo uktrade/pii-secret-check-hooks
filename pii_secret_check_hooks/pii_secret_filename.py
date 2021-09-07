@@ -5,8 +5,8 @@ from pii_secret_check_hooks.util import get_excluded_filenames
 from pii_secret_check_hooks.config import filename_regex
 
 
-def detect_match_against_filename(filename, file_name_regexes):
-    for regex in file_name_regexes:
+def detect_match_against_filename(filename, file_name_regex):
+    for regex in file_name_regex:
         if re.search(regex, filename):
             return regex
 

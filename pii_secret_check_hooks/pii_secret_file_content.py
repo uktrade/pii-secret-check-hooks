@@ -1,3 +1,4 @@
+import logging
 import argparse
 import re
 
@@ -42,12 +43,18 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
         return "'entropy check failed'"
 
     for pii_key, regex in pii_regex.items():
-        if re.search(regex, line_to_check):
-            return pii_key
+        try:
+            if re.search(regex, line_to_check):
+                return pii_key
+        except re.error as ex:
+            logging.error(ex)
 
     for custom_regex in custom_regex:
-        if re.search(custom_regex, line_to_check):
-            return regex
+        try:
+            if re.search(custom_regex, line_to_check):
+                return regex
+        except re.error as ex:
+            logging.error(ex)
 
     return None
 

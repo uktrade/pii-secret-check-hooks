@@ -1,3 +1,4 @@
+import logging
 import requests
 import yaml
 import sys
@@ -47,8 +48,9 @@ def main():
             )
 
     except Exception as e:
-        print(
-            "Checking for updates against HMRC hooks failed ({error}). Run 'pre-commit autoupdate' in this directory as a precaution".format(
+        logging.error(
+            "Checking for updates against DIT PII and security hooks failed ({error}). "
+            "Run 'pre-commit autoupdate' in this directory as a precaution".format(
                 error=e
             )
         )
