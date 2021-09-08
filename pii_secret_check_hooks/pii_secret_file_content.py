@@ -10,7 +10,7 @@ from truffleHog.truffleHog import (
     shannon_entropy,
 )
 
-from pii_secret_check_hooks.config import pii_regex
+from pii_secret_check_hooks.config import PII_REGEX
 from pii_secret_check_hooks.util import (
     get_regex_from_file,
     get_excluded_filenames,
@@ -42,7 +42,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
     if entropy_check(line_to_check):
         return "'entropy check failed'"
 
-    for pii_key, regex in pii_regex.items():
+    for pii_key, regex in PII_REGEX.items():
         try:
             if re.search(regex, line_to_check):
                 return pii_key

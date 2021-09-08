@@ -2,7 +2,7 @@ import argparse
 import re
 
 from pii_secret_check_hooks.util import get_excluded_filenames
-from pii_secret_check_hooks.config import filename_regex
+from pii_secret_check_hooks.config import FILENAME_REGEX
 
 
 def detect_match_against_filename(filename, file_name_regex):
@@ -28,7 +28,7 @@ def main(argv=None):
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
-            match = detect_match_against_filename(filename, filename_regex)
+            match = detect_match_against_filename(filename, FILENAME_REGEX)
             if match:
                 exit_code = 1
                 print(

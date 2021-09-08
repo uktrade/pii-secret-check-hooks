@@ -1,6 +1,8 @@
-repo_url = "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
+REPO_URL = "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
 
-filename_regex = [
+RELEASE_CHECK_URL = "https://api.github.com/repos/uktrade/pii-secret-check-hooks/releases/latest"
+
+FILENAME_REGEX = [
    # Databases
    "\.backup$",
    "\.bak$",
@@ -39,7 +41,7 @@ filename_regex = [
    "^\.*kdb",
 ]
 
-pii_regex = {
+PII_REGEX = {
    "'First name' found:": "/first(\s+)name$",
    "'Last name' found:": "/last(\s+)name$",
    "Postcode": "([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})",

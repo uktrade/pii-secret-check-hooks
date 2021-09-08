@@ -3,6 +3,8 @@ import requests
 import yaml
 import sys
 
+from pii_secret_check_hooks.config import RELEASE_CHECK_URL
+
 
 def check_release_version_from_config(pre_commit_config_yaml):
     """checks the pre-commit-config.yaml in the current directory and returns the release tag detailed there"""
@@ -14,7 +16,10 @@ def check_release_version_from_config(pre_commit_config_yaml):
 
 def check_release_version_from_remote_repo():
     req = requests.get(
-        "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
+        RELEASE_CHECK_URL,
+        headers={
+            "Accept": "application/vnd.github.v3+json",
+        },
     )
     content = req.json()
     return content["tag_name"]
