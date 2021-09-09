@@ -11,6 +11,7 @@ requests
 truffleHog
 truffleHogRegexes>=0.0.7
 pyyaml
+rich
 
 [requires]
 python_version = "3.7"

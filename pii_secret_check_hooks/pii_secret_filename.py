@@ -1,9 +1,11 @@
-import logging
 import argparse
 import re
+from rich.console import Console
 
 from pii_secret_check_hooks.util import get_excluded_filenames
 from pii_secret_check_hooks.config import FILENAME_REGEX
+
+console = Console()
 
 
 def detect_match_against_filename(filename, file_name_regex):
@@ -32,10 +34,9 @@ def main(argv=None):
             match = detect_match_against_filename(filename, FILENAME_REGEX)
             if match:
                 exit_code = 1
-                logging.error(
-                    "{file} may contain sensitive information due to the file type".format(
-                        file=filename
-                    )
+                console.print(
+                    f"{filename} may contain sensitive information due to the file type",
+                    style="bold red"
                 )
 
     return exit_code

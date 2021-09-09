@@ -1,7 +1,7 @@
 import os
-import logging
 import argparse
 import re
+from rich.console import Console
 
 from truffleHogRegexes.regexChecks import regexes as trufflehog_regexes
 from truffleHog.truffleHog import (
@@ -16,6 +16,8 @@ from pii_secret_check_hooks.util import (
     get_regex_from_file,
     get_excluded_filenames,
 )
+
+console = Console()
 
 
 def entropy_check(line):
@@ -48,7 +50,10 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
             if re.search(pii_regex, line_to_check.lower()):
                 return pii_key
         except re.error as ex:
-            logging.error(f"PII regex error for {pii_key} regex: '{ex}'")
+            console.print(
+                f"PII regex error for {pii_key} regex: '{ex}",
+                style="bold red"
+            )
             return None
 
     for custom_regex in custom_regex_list:
@@ -61,7 +66,10 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
             if re.search(custom_regex, line_to_check.lower()):
                 return f"'{regex_name}'"
         except re.error as ex:
-            logging.error(f"Custom regex error for '{custom_regex}' regex: '{ex}'")
+            console.print(
+                f"Custom regex error for '{custom_regex}' regex: '{ex}'",
+                style="bold red"
+            )
             return None
 
     return None
@@ -98,7 +106,10 @@ def main(argv=None):
     for filename in args.filenames:
         _, file_extension = os.path.splitext(filename)
         if file_extension in IGNORE_EXTENSIONS:
-            logging.warning(f"Ignoring file '{filename}' as extension is ignored by default")
+            console.print(
+                f"{filename} ignoring file '{filename}' as extension is ignored by default",
+                style="bold red"
+            )
         else:
             if filename not in excluded_filenames:
                 try:
@@ -111,20 +122,22 @@ def main(argv=None):
                                 rule = detect_pii_or_secret_in_line(line, custom_regex_list)
 
                                 if rule:
-                                    logging.error(
-                                        "Potentially sensitive string matching rule: "
-                                        f"{rule} found on line {i + 1} of {filename}"
+                                    console.print(
+                                        f"{filename} line{i + 1}. Potentially sensitive string matching rule: {rule}",
+                                        style="bold red"
                                     )
                                     exit_code = 1
                         except Exception as ex:
                             # These errors can potentially be ignored
-                            logging.warning(
-                                f"Error when attempting to parse file content - file: {filename}, ex: '{ex}'."
+                            console.print(
+                                f"{filename} error when attempting to parse file content, ex: '{ex}'.",
+                                style="bold red"
                             )
                 except EnvironmentError as ex:
                     # Error out of process if we cannot access file
-                    logging.error(
-                        f"Error when attempting to open file: {filename}, ex: {ex}."
+                    console.print(
+                        f"{filename} error when attempting to open file, ex: {ex}.",
+                        style="bold red"
                     )
                     exit_code = 1
 
