@@ -57,7 +57,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
             regex_name = parts[0]
             custom_regex = parts[1]
         try:
-            if re.search(custom_regex, line_to_check.lower):
+            if re.search(custom_regex, line_to_check.lower()):
                 return regex_name
         except re.error as ex:
             logging.error(f"Custom regex error for '{custom_regex}' regex: '{ex}'")
