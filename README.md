@@ -6,9 +6,10 @@ Install pre-commit - [Install pre-commit](https://pre-commit.com/#install)
 Make sure you run:
 
     pre-commit install
+    pre-commit autoupdate
 
 ## Setting up
- * Add a copy of `.pre-commit-config.yaml` to your repo (in the root of this repo)
+ * Copy `.pre-commit-config.yaml` to your repo
  * Add a `.pii-secret-exclude` file if needed (explanation below)
  * Add a `.pii-custom-regex` file if needed (explanation below)
 
