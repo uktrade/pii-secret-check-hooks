@@ -2,6 +2,14 @@ REPO_URL = "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
 
 RELEASE_CHECK_URL = "https://api.github.com/repos/uktrade/pii-secret-check-hooks/releases/latest"
 
+IGNORE_EXTENSIONS = [
+   ".png",
+   ".jpg",
+   ".jpeg",
+   ".svg",
+   ".ico",
+]
+
 FILENAME_REGEX = [
    # Databases
    "\.backup$",
