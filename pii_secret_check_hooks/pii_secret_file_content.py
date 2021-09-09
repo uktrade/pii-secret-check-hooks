@@ -1,3 +1,4 @@
+import os
 import logging
 import argparse
 import re
@@ -10,7 +11,7 @@ from truffleHog.truffleHog import (
     shannon_entropy,
 )
 
-from pii_secret_check_hooks.config import PII_REGEX
+from pii_secret_check_hooks.config import IGNORE_EXTENSIONS, PII_REGEX
 from pii_secret_check_hooks.util import (
     get_regex_from_file,
     get_excluded_filenames,
@@ -95,33 +96,37 @@ def main(argv=None):
     exit_code = 0
 
     for filename in args.filenames:
-        if filename not in excluded_filenames:
-            try:
-                with open(filename, "r") as f:
-                    try:
-                        for i, line in enumerate(f):
-                            if "#PS-IGNORE" in line:
-                                continue
+        _, file_extension = os.path.splitext(filename)
+        if file_extension in IGNORE_EXTENSIONS:
+            logging.warning(f"Ignoring file '{filename}' as extension is ignored by default")
+        else:
+            if filename not in excluded_filenames:
+                try:
+                    with open(filename, "r") as f:
+                        try:
+                            for i, line in enumerate(f):
+                                if "#PS-IGNORE" in line:
+                                    continue
 
-                            rule = detect_pii_or_secret_in_line(line, custom_regex_list)
+                                rule = detect_pii_or_secret_in_line(line, custom_regex_list)
 
-                            if rule:
-                                logging.error(
-                                    "Potentially sensitive string matching rule: "
-                                    f"{rule} found on line {i + 1} of {filename}"
-                                )
-                                exit_code = 1
-                    except Exception as ex:
-                        # These errors can potentially be ignored
-                        logging.warning(
-                            f"Error when attempting to parse file content - file: {filename}, ex: '{ex}'."
-                        )
-            except EnvironmentError as ex:
-                # Error out of process if we cannot access file
-                logging.error(
-                    f"Error when attempting to open file: {filename}, ex: '{ex}'."
-                )
-                exit_code = 1
+                                if rule:
+                                    logging.error(
+                                        "Potentially sensitive string matching rule: "
+                                        f"{rule} found on line {i + 1} of {filename}"
+                                    )
+                                    exit_code = 1
+                        except Exception as ex:
+                            # These errors can potentially be ignored
+                            logging.warning(
+                                f"Error when attempting to parse file content - file: {filename}, ex: '{ex}'."
+                            )
+                except EnvironmentError as ex:
+                    # Error out of process if we cannot access file
+                    logging.error(
+                        f"Error when attempting to open file: {filename}, ex: {ex}."
+                    )
+                    exit_code = 1
 
     return exit_code
 
