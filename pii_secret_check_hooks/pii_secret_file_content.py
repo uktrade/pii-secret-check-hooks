@@ -96,20 +96,33 @@ def main(argv=None):
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
-            with open(filename, "r") as f:
-                for i, line in enumerate(f):
-                    if "#PS-IGNORE" in line:
-                        continue
+            try:
+                with open(filename, "r") as f:
+                    try:
+                        for i, line in enumerate(f):
+                            if "#PS-IGNORE" in line:
+                                continue
 
-                    rule = detect_pii_or_secret_in_line(line, custom_regex_list)
+                            rule = detect_pii_or_secret_in_line(line, custom_regex_list)
 
-                    if rule:
-                        logging.error(
-                            "Potentially sensitive string matching rule: {rule} found on line {line_number} of {file}".format(
-                                rule=rule, line_number=i + 1, file=filename
-                            )
+                            if rule:
+                                logging.error(
+                                    "Potentially sensitive string matching rule: "
+                                    f"{rule} found on line {i + 1} of {filename}"
+                                )
+                                exit_code = 1
+                    except Exception as ex:
+                        # These errors can potentially be ignored
+                        logging.warning(
+                            f"Error when attempting to parse file content - file: {filename}, ex: '{ex}'."
                         )
-                        exit_code = 1
+            except EnvironmentError as ex:
+                # Error out of process if we cannot access file
+                logging.error(
+                    f"Error when attempting to open file: {filename}, ex: '{ex}'."
+                )
+                exit_code = 1
+
     return exit_code
 
 
