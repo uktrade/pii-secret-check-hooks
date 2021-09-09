@@ -5,10 +5,10 @@ from pathlib import Path
 def _get_file_content_as_list(file_path, file_type):
     file = Path(file_path)
     if not file.is_file():
-        logging.warning(f"No {file_type} file found in path {file_path}")
+        logging.info(f"No {file_type} file found in path {file_path}")
         return []
 
-    logging.warning(f"Found {file_type} file '{file_path}'")
+    logging.info(f"Found {file_type} file '{file_path}'")
 
     lines = []
 
@@ -17,7 +17,7 @@ def _get_file_content_as_list(file_path, file_type):
             stripped_line = line.strip()
             lines.append(stripped_line)
 
-    logging.warning(f"Found {len(lines)} files in {file_type} file")
+    logging.info(f"Found {len(lines)} files in {file_type} file")
 
     return lines
 

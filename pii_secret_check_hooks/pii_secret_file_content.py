@@ -34,7 +34,7 @@ def entropy_check(line):
     return len(strings_found) > 0
 
 
-def detect_pii_or_secret_in_line(line_to_check, custom_regex):
+def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
     for trufflehog_key, trufflehog_regex in trufflehog_regexes.items():
         if re.search(trufflehog_regex, line_to_check):
             return trufflehog_key
@@ -42,18 +42,23 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
     if entropy_check(line_to_check):
         return "'entropy check failed'"
 
-    for pii_key, regex in PII_REGEX.items():
+    for pii_key, pii_regex in PII_REGEX.items():
         try:
-            if re.search(regex, line_to_check):
+            if re.search(pii_regex, line_to_check.lower()):
                 return pii_key
         except re.error as ex:
             logging.error(f"PII regex error for {pii_key} regex: '{ex}'")
             return None
 
-    for custom_regex in custom_regex:
+    for custom_regex in custom_regex_list:
+        regex_name = custom_regex
+        if "=" in custom_regex_list:
+            parts = custom_regex_list.split("=")
+            regex_name = parts[0]
+            custom_regex = parts[1]
         try:
-            if re.search(custom_regex, line_to_check):
-                return regex
+            if re.search(custom_regex, line_to_check.lower):
+                return regex_name
         except re.error as ex:
             logging.error(f"Custom regex error for '{custom_regex}' regex: '{ex}'")
             return None
@@ -82,7 +87,7 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
-    custom_regex = get_regex_from_file(args.regex_file)
+    custom_regex_list = get_regex_from_file(args.regex_file)
 
     exit_code = 0
 
@@ -93,10 +98,10 @@ def main(argv=None):
                     if "#PS-IGNORE" in line:
                         continue
 
-                    rule = detect_pii_or_secret_in_line(line, custom_regex)
+                    rule = detect_pii_or_secret_in_line(line, custom_regex_list)
 
                     if rule:
-                        print(
+                        logging.error(
                             "Potentially sensitive string matching rule: {rule} found on line {line_number} of {file}".format(
                                 rule=rule, line_number=i + 1, file=filename
                             )
