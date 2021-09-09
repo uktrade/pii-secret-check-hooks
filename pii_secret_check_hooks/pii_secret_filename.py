@@ -1,3 +1,4 @@
+import logging
 import argparse
 import re
 
@@ -22,7 +23,7 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
 
-    excluded_filenames = get_excluded_filenames(args.exclude[0])
+    excluded_filenames = get_excluded_filenames(args.exclude)
 
     exit_code = 0
 
@@ -31,7 +32,7 @@ def main(argv=None):
             match = detect_match_against_filename(filename, FILENAME_REGEX)
             if match:
                 exit_code = 1
-                print(
+                logging.error(
                     "{file} may contain sensitive information due to the file type".format(
                         file=filename
                     )
