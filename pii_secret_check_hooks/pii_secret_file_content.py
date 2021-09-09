@@ -52,8 +52,8 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
 
     for custom_regex in custom_regex_list:
         regex_name = custom_regex
-        if "=" in custom_regex_list:
-            parts = custom_regex_list.split("=")
+        if "=" in custom_regex:
+            parts = custom_regex.split("=")
             regex_name = parts[0]
             custom_regex = parts[1]
         try:
