@@ -16,15 +16,15 @@ def main(argv=None):
     parser.add_argument("filenames", nargs="*", help="Files to check")
     parser.add_argument(
         "exclude",
-        nargs=1,
+        nargs="?",
         default=".pii-secret-exclude",
         help="Exclude file path",
     )
     args = parser.parse_args(argv)
 
-    exit_code = 0
-
     excluded_filenames = get_excluded_filenames(args.exclude[0])
+
+    exit_code = 0
 
     for filename in args.filenames:
         if filename not in excluded_filenames:

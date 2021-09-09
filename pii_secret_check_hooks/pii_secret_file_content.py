@@ -63,24 +63,28 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex):
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument("filenames", nargs="*", help="Files to check")
+    parser.add_argument(
+        "filenames",
+        nargs="*",
+        help="Files to check",
+    )
     parser.add_argument(
         "exclude",
-        nargs=1,
+        nargs="?",
         default=".pii-secret-exclude",
         help="Exclude file path",
     )
     parser.add_argument(
         "regex_file",
-        nargs=1,
+        nargs="?",
         default=".pii-custom-regex",
         help="File with custom regex (one per line)",
     )
     args = parser.parse_args(argv)
-    exit_code = 0
+    excluded_filenames = get_excluded_filenames(args.exclude)
+    custom_regex = get_regex_from_file(args.regex_file)
 
-    excluded_filenames = get_excluded_filenames(args.exclude[0])
-    custom_regex = get_regex_from_file(args.regex_file[0])
+    exit_code = 0
 
     for filename in args.filenames:
         if filename not in excluded_filenames:
