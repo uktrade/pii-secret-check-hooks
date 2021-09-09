@@ -123,7 +123,7 @@ def main(argv=None):
 
                                 if rule:
                                     console.print(
-                                        f"{filename} line{i + 1}. Potentially sensitive string matching rule: {rule}",
+                                        f"{filename} line {i + 1}. Potentially sensitive string matching rule: {rule}",
                                         style="bold red"
                                     )
                                     exit_code = 1
