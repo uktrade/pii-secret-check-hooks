@@ -89,6 +89,9 @@ def main(argv=None):
     excluded_filenames = get_excluded_filenames(args.exclude)
     custom_regex_list = get_regex_from_file(args.regex_file)
 
+    # Exclude custom regex file
+    excluded_filenames.append(args.regex_file)
+
     exit_code = 0
 
     for filename in args.filenames:
