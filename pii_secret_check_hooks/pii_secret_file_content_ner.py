@@ -52,7 +52,7 @@ def main(argv=None):
 
     console.print(
         "Using spaCY NER (https://spacy.io/) for PII checks",
-        style="bold grey",
+        style="bold blue",
     )
 
     for filename in args.filenames:
