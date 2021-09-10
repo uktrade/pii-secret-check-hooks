@@ -2,20 +2,22 @@ import os
 import argparse
 import spacy
 from rich.console import Console
+import en_core_web_sm
 
 from pii_secret_check_hooks.config import IGNORE_EXTENSIONS
 from pii_secret_check_hooks.util import (
     get_excluded_filenames,
 )
 
-spacy.load('en_core_web_sm')
+nlp = en_core_web_sm.load()
 
 console = Console()
 
 
 def detect_named_entities(line):
-    if line.ents:
-        for ent in line.ents:
+    doc = nlp(line)
+    if doc.ents:
+        for ent in doc.ents:
             console.print(
                 "Found named entity in line, please check for PII"
                 f"'{ent.text}' - {str(ent.start_char)} - "
