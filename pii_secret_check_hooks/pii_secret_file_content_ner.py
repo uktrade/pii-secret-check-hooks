@@ -43,7 +43,7 @@ def main(argv=None):
     excluded_filenames = get_excluded_filenames(args.exclude)
 
     # Exclude custom regex file
-    excluded_filenames.append(args.regex_file)
+    excluded_filenames.append(args.exclude)
 
     exit_code = 0
 
