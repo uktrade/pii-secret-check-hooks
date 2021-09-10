@@ -4,7 +4,7 @@ import spacy
 from rich.console import Console
 import en_core_web_sm
 
-from pii_secret_check_hooks.config import IGNORE_EXTENSIONS
+from pii_secret_check_hooks.config import IGNORE_EXTENSIONS, NER_IGNORE
 from pii_secret_check_hooks.util import (
     get_excluded_filenames,
 )
@@ -18,12 +18,11 @@ def detected_named_entities(line, line_num):
     doc = nlp(line)
     if doc.ents:
         for ent in doc.ents:
-            console.print(
-                f"Found named entity in line {line_num}, please check for PII "
-                f"'{ent.text}' - {str(ent.start_char)} - "
-                f"{str(ent.end_char)} - {ent.label_} - {str(spacy.explain(ent.label_))}",
-                style="bold blue",
-            )
+            if ent.label_ not in NER_IGNORE:
+                console.print(
+                    f"Line {line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
+                    style="white on blue",
+                )
         return True
 
     return False
@@ -52,15 +51,15 @@ def main(argv=None):
 
     console.print(
         "Using spaCY NER (https://spacy.io/) for PII checks",
-        style="bold blue",
+        style="white on blue",
     )
 
     for filename in args.filenames:
         _, file_extension = os.path.splitext(filename)
         if file_extension in IGNORE_EXTENSIONS:
             console.print(
-                f"{filename} ignoring file '{filename}' as extension is ignored by default",
-                style="bold red"
+                f"{filename} ignoring file as extension is ignored by default",
+                style="white on blue"
             )
         else:
             if filename not in excluded_filenames:
@@ -69,7 +68,7 @@ def main(argv=None):
                         try:
                             console.print(
                                 f"{filename} checking for PII",
-                                style="bold blue"
+                                style="white on blue"
                             )
                             for i, line in enumerate(f):
                                 if "#PS-IGNORE" in line:

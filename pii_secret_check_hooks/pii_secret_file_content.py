@@ -52,7 +52,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
         except re.error as ex:
             console.print(
                 f"PII regex error for {pii_key} regex: '{ex}",
-                style="bold red"
+                style="white on blue"
             )
             return None
 
@@ -68,7 +68,7 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
         except re.error as ex:
             console.print(
                 f"Custom regex error for '{custom_regex}' regex: '{ex}'",
-                style="bold red"
+                style="white on blue"
             )
             return None
 
@@ -107,8 +107,8 @@ def main(argv=None):
         _, file_extension = os.path.splitext(filename)
         if file_extension in IGNORE_EXTENSIONS:
             console.print(
-                f"{filename} ignoring file '{filename}' as extension is ignored by default",
-                style="bold red"
+                f"{filename} ignoring file as extension ignored by default",
+                style="white on blue"
             )
         else:
             if filename not in excluded_filenames:
@@ -123,8 +123,8 @@ def main(argv=None):
 
                                 if rule:
                                     console.print(
-                                        f"{filename} line {i + 1}. Potentially sensitive string matching rule: {rule}",
-                                        style="bold red"
+                                        f"{filename} line {i + 1}. String matching rule found: {rule}",
+                                        style="white on blue"
                                     )
                                     exit_code = 1
                         except Exception as ex:

@@ -2,8 +2,11 @@ import logging
 import requests
 import yaml
 import sys
+from rich.console import Console
 
 from pii_secret_check_hooks.config import RELEASE_CHECK_URL
+
+console = Console()
 
 
 def check_release_version_from_config(pre_commit_config_yaml):
@@ -30,23 +33,26 @@ def main():
         config_version = check_release_version_from_config(".pre-commit-config.yaml")
         latest_release = check_release_version_from_remote_repo()
         if config_version == latest_release:
-            logging.info("All DIT PII and DIT security hooks are up to date")
+            console.print(
+                "All DIT PII and DIT security hooks are up to date",
+                style="white on green",
+            )
             return 0
         else:
-            logging.info(
+            console.print(
                 "Your pii-secret-check-hooks version is {yours} and latest is {latest}."
                 ' Please run the following command in this directory: "pre-commit autoupdate"'.format(
                     yours=config_version, latest=latest_release
-                )
+                ),
+                style="red",
             )
             return 1
 
     except Exception as e:
-        logging.error(
-            "Checking for updates against DIT PII and security hooks failed ({error}). "
-            "Run 'pre-commit autoupdate' in this directory as a precaution".format(
-                error=e
-            )
+        console.print(
+            f"Checking for updates against DIT PII and security hooks failed ({e}). "
+            "Run 'pre-commit autoupdate' in this directory as a precaution",
+            style="red",
         )
         return 1
 
