@@ -15,3 +15,9 @@
     description: 'Check repository version'
     language: python
     entry: pii-secret-file-version-check
+
+-   id: pii_secret_file_content_ner
+    name: PII Named Entity Recognition
+    description: 'Check for PII content with Named Entity Recognition'
+    language: python
+    entry: pii-secret-file-content-ner
