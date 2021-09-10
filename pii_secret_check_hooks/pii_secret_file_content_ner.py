@@ -14,12 +14,12 @@ nlp = en_core_web_sm.load()
 console = Console()
 
 
-def detected_named_entities(line):
+def detected_named_entities(line, line_num):
     doc = nlp(line)
     if doc.ents:
         for ent in doc.ents:
             console.print(
-                "Found named entity in line, please check for PII "
+                f"Found named entity in line {line_num}, please check for PII "
                 f"'{ent.text}' - {str(ent.start_char)} - "
                 f"{str(ent.end_char)} - {ent.label_} - {str(spacy.explain(ent.label_))}",
                 style="bold blue",
@@ -75,7 +75,7 @@ def main(argv=None):
                                 if "#PS-IGNORE" in line:
                                     continue
 
-                                if detected_named_entities(line):
+                                if detected_named_entities(line, (i + 1)):
                                     exit_code = 1
 
                         except Exception as ex:
