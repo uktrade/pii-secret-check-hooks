@@ -20,6 +20,7 @@ setup(
             "pii-secret-file-content = pii_secret_check_hooks.pii_secret_file_content:main",
             "pii-secret-filename = pii_secret_check_hooks.pii_secret_filename:main",
             "pii-secret-file-version-check = pii_secret_check_hooks.hooks_version_check:main",
+            "pii-secret-file-content-ner = pii_secret_check_hooks.pii_secret_file_content_ner:main",
         ]
     },
     packages=find_packages(),
