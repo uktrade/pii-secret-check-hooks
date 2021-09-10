@@ -14,16 +14,19 @@ nlp = en_core_web_sm.load()
 console = Console()
 
 
-def detect_named_entities(line):
+def detected_named_entities(line):
     doc = nlp(line)
     if doc.ents:
         for ent in doc.ents:
             console.print(
-                "Found named entity in line, please check for PII"
+                "Found named entity in line, please check for PII "
                 f"'{ent.text}' - {str(ent.start_char)} - "
                 f"{str(ent.end_char)} - {ent.label_} - {str(spacy.explain(ent.label_))}",
                 style="bold blue",
             )
+        return True
+
+    return False
 
 
 def main(argv=None):
@@ -47,6 +50,11 @@ def main(argv=None):
 
     exit_code = 0
 
+    console.print(
+        "Using spaCY NER (https://spacy.io/) for PII checks",
+        style="bold grey",
+    )
+
     for filename in args.filenames:
         _, file_extension = os.path.splitext(filename)
         if file_extension in IGNORE_EXTENSIONS:
@@ -60,15 +68,16 @@ def main(argv=None):
                     with open(filename, "r") as f:
                         try:
                             console.print(
-                                f"{filename} checking for PII using spaCY NER (https://spacy.io/)\n"
-                                f"This check will not prevent commits from being made",
+                                f"{filename} checking for PII",
                                 style="bold blue"
                             )
                             for i, line in enumerate(f):
                                 if "#PS-IGNORE" in line:
                                     continue
 
-                                detect_named_entities(line)
+                                if detected_named_entities(line):
+                                    exit_code = 1
+
                         except Exception as ex:
                             # These errors can potentially be ignored
                             console.print(
