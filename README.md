@@ -9,7 +9,7 @@ Make sure you run:
     pre-commit autoupdate
 
 ## Setting up
- * Copy `.pre-commit-config.yaml` to your repo
+ * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
  * Add a `.pii-secret-exclude` file if needed (explanation below)
  * Add a `.pii-custom-regex` file if needed (explanation below)
 
@@ -38,3 +38,8 @@ This logic should be run on every commit. When you find a false positive. Add
 `#PS-IGNORE` to the affected line or exclude the file (see caveats above).
 
 Please report issues and bugs to the Live Services Team.
+
+## Updating the hooks
+In order to run the latest version of these hooks run:
+
+    pre-commit autoupdate

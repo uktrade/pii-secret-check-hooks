@@ -23,6 +23,15 @@ setup(
         ]
     },
     packages=find_packages(),
-    install_requires=["truffleHogRegexes", "requests", "truffleHog", "pyyaml", "rich", ],
+    install_requires=[
+        "truffleHogRegexes",
+        "requests",
+        "truffleHog",
+        "pyyaml",
+        "rich",
+        "setuptools",
+        "wheel",
+        "spacy",
+    ],
     tests_require=["pytest"],
 )
