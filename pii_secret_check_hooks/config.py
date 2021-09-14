@@ -15,6 +15,7 @@ IGNORE_EXTENSIONS = [
 ]
 
 FILENAME_REGEX = [
+   "\.txt",
    # Databases
    "\.backup$",
    "\.bak$",
@@ -73,7 +74,7 @@ PII_REGEX = {
 }
 
 NER_IGNORE = [
-   "DATE", "CARDINAL", "MONEY", "ORDINAL", "PERCENT", "TIME",
+   "DATE", "CARDINAL", "MONEY", "ORDINAL", "PERCENT", "TIME", "GPE",
 ]
 
 NER_EXCLUDE = [
@@ -206,4 +207,11 @@ NER_EXCLUDE = [
    "config",
    "COPY",
    "RUN",
+   "FixtureData",
+   "ModelFilterView",
+   "Byte",
+   "USE_L10N",
+   "PRIMARY",
+   "CheckboxSelectMultiple",
+   "CommandError",
 ]
