@@ -12,7 +12,7 @@ Make sure you run:
  * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
  * Add a `.pii-secret-exclude` file if needed (explanation below)
  * Add a `.pii-custom-regex` file if needed (explanation below)
- * Add a `.pii-custom-ner-exclude` file if needed (explanation below)
+ * Add a `.pii-ner-exclude` file if needed (explanation below)
  
 ## Excluding files with .pii-secret-exclude
 In order to exclude files from the checks add them to this file. HOWEVER, you should 

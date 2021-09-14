@@ -55,7 +55,7 @@ def main(argv=None):
     parser.add_argument(
         "ner_exclude",
         nargs="?",
-        default=".pii-custom-ner-exclude",
+        default=".pii-ner-exclude",
         help="Named Entity Recognition exclude file path. One per line.",
     )
     args = parser.parse_args(argv)

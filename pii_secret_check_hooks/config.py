@@ -214,4 +214,7 @@ NER_EXCLUDE = [
    "PRIMARY",
    "CheckboxSelectMultiple",
    "CommandError",
+   "AUTO",
+   "@require_GET",
+   "ContentType",
 ]
