@@ -1,4 +1,3 @@
-import logging
 import requests
 import yaml
 import sys

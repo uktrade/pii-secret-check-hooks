@@ -11,6 +11,7 @@ from pii_secret_check_hooks.config import (
 )
 from pii_secret_check_hooks.util import (
     get_excluded_filenames,
+    get_excluded_ner,
 )
 
 nlp = en_core_web_sm.load()
@@ -26,7 +27,7 @@ def detected_named_entities(line, line_num, excluded_entities):
             if (
                 ent.label_ not in NER_IGNORE and
                 ent.text not in NER_EXCLUDE and
-                ent.text not in excluded_entities
+                ent.text.lower() not in excluded_entities
             ):
                 console.print(
                     f"Line {line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
@@ -59,7 +60,7 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
-    excluded_entities = get_excluded_filenames(args.ner_exclude)
+    excluded_entities = get_excluded_ner(args.ner_exclude)
 
     # Exclude custom regex file
     excluded_filenames.append(args.exclude)

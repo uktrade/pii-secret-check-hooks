@@ -8,6 +8,8 @@ IGNORE_EXTENSIONS = [
    ".jpeg",
    ".svg",
    ".ico",
+   ".eot",
+   ".ttf",
 ]
 
 FILENAME_REGEX = [
@@ -19,9 +21,18 @@ FILENAME_REGEX = [
    "\.csv$",
    "\.xlsx$",
    "\.xls$",
-   # Office extensions
-   "",
-   # .pdf
+   # Word extensions (legacy)
+   "\.doc&",
+   "\.dot&",
+   "\.wbk&",
+   # Word extensions
+   "\.docx&",
+   "\.docm&",
+   "\.docx&",
+   "\.docm&",
+   "\.docb&",
+   # Adobe
+   "\.pdf$",
    # conf
    "\.conf$",
    "\.env$",
@@ -89,4 +100,21 @@ NER_EXCLUDE = [
    "DecimalField",
    "ForeignKey",
    "TextField",
+   "List",
+   "QuerySet",
+   "Task",
+   "TextChoices",
+   "sys",
+   "Menu",
+   "NamedTuple",
+   "DatabaseError",
+   "HttpRequest",
+   "TestCase",
+   "DateField",
+   "BooleanField",
+   "Faker",
+   "Template",
+   "Meta",
+   "utc",
+   "LazyAttribute",
 ]
