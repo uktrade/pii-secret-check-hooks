@@ -52,7 +52,8 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
         except re.error as ex:
             console.print(
                 f"PII regex error for {pii_key} regex: '{ex}",
-                style="white on blue"
+                style="white on blue",
+                soft_wrap=True,
             )
             return None
 
@@ -68,7 +69,8 @@ def detect_pii_or_secret_in_line(line_to_check, custom_regex_list):
         except re.error as ex:
             console.print(
                 f"Custom regex error for '{custom_regex}' regex: '{ex}'",
-                style="white on blue"
+                style="white on blue",
+                soft_wrap=True,
             )
             return None
 
@@ -106,10 +108,11 @@ def main(argv=None):
     for filename in args.filenames:
         _, file_extension = os.path.splitext(filename)
         if file_extension in IGNORE_EXTENSIONS:
-            console.print(
-                f"{filename} ignoring file as extension ignored by default",
-                style="white on blue"
-            )
+            pass
+            # console.print(
+            #     f"{filename} ignoring file as extension ignored by default",
+            #     style="white on blue"
+            # )
         else:
             if filename not in excluded_filenames:
                 try:
@@ -124,20 +127,23 @@ def main(argv=None):
                                 if rule:
                                     console.print(
                                         f"{filename} line {i + 1}. String matching rule found: {rule}",
-                                        style="white on blue"
+                                        style="white on blue",
+                                        soft_wrap=True,
                                     )
                                     exit_code = 1
                         except Exception as ex:
                             # These errors can potentially be ignored
                             console.print(
                                 f"{filename} error when attempting to parse file content, ex: '{ex}'.",
-                                style="bold red"
+                                style="bold red",
+                                soft_wrap=True,
                             )
                 except EnvironmentError as ex:
                     # Error out of process if we cannot access file
                     console.print(
                         f"{filename} error when attempting to open file, ex: {ex}.",
-                        style="bold red"
+                        style="bold red",
+                        soft_wrap=True,
                     )
                     exit_code = 1
 

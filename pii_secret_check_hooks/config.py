@@ -19,6 +19,9 @@ FILENAME_REGEX = [
    "\.csv$",
    "\.xlsx$",
    "\.xls$",
+   # Office extensions
+   "",
+   # .pdf
    # conf
    "\.conf$",
    "\.env$",
@@ -58,4 +61,32 @@ PII_REGEX = {
 
 NER_IGNORE = [
    "DATE", "CARDINAL", "MONEY", "ORDINAL", "PERCENT",
+]
+
+NER_EXCLUDE = [
+   "UnicodeDecoder",
+   "S3",
+   "Django",
+   "Redis",
+   "CACHES",
+   "DEFAULT_DOMAIN",
+   "False",
+   "email.eu-west-1.amazonaws.com",
+   "Email",
+   "JavaScript",
+   "CSS",
+   "NOQA",
+   "Password",
+   "BCryptSHA256PasswordHasher",
+   "Django 2.1.7",
+   "File",
+   "get_object_or_404",
+   "HttpResponse",
+   "PermissionDenied",
+   "django.contrib",
+   "django.conf import settings",
+   "CharField",
+   "DecimalField",
+   "ForeignKey",
+   "TextField",
 ]

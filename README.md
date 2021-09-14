@@ -12,7 +12,8 @@ Make sure you run:
  * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
  * Add a `.pii-secret-exclude` file if needed (explanation below)
  * Add a `.pii-custom-regex` file if needed (explanation below)
-
+ * Add a `.pii-custom-ner-exclude` file if needed (explanation below)
+ 
 ## Excluding files with .pii-secret-exclude
 In order to exclude files from the checks add them to this file. HOWEVER, you should 
 heavily favour excluding lines using `#PS-IGNORE`, rather than files.
@@ -23,6 +24,9 @@ Add our own regexes for secret or PII identification. Each one should be added o
     name=regex
 
 Regexes used should be Python compatible and should not use start and end markers.
+
+## Excluding false positives from the NER hook
+Add your own list of entities that should be excluded in the .pii-custom-ner-exclude file.
 
 ## Initial run
 Run the following command to identify issues in your repo.
@@ -43,3 +47,8 @@ Please report issues and bugs to the Live Services Team.
 In order to run the latest version of these hooks run:
 
     pre-commit autoupdate
+
+## TODO
+ * Group issues at end of output rather than displaying amongst ignore messages
+ * Add pdf and office extensions
+ * Add help command

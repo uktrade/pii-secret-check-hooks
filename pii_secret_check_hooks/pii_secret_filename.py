@@ -36,7 +36,8 @@ def main(argv=None):
                 exit_code = 1
                 console.print(
                     f"{filename} may contain sensitive information due to the file type",
-                    style="bold red"
+                    style="bold red",
+                    soft_wrap=True,
                 )
 
     return exit_code

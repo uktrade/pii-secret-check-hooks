@@ -36,6 +36,7 @@ def main():
             console.print(
                 "All DIT PII and DIT security hooks are up to date",
                 style="white on green",
+                soft_wrap=True,
             )
             return 0
         else:
@@ -45,6 +46,7 @@ def main():
                     yours=config_version, latest=latest_release
                 ),
                 style="red",
+                soft_wrap=True,
             )
             return 1
 
@@ -53,6 +55,7 @@ def main():
             f"Checking for updates against DIT PII and security hooks failed ({e}). "
             "Run 'pre-commit autoupdate' in this directory as a precaution",
             style="red",
+            soft_wrap=True,
         )
         return 1
 
