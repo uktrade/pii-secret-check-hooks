@@ -13,30 +13,15 @@ from pii_secret_check_hooks.util import (
     get_excluded_filenames,
     get_excluded_ner,
 )
+from pii_secret_check_hooks.process_file import (
+    NERFileProcess,
+    LineUpdatedException,
+    FoundSensitiveException,
+)
 
 nlp = en_core_web_sm.load()
 
 console = Console()
-
-
-def detected_named_entities(line, line_num, excluded_entities):
-    doc = nlp(line)
-    found_issue = False
-    if doc.ents:
-        for ent in doc.ents:
-            if (
-                ent.label_ not in NER_IGNORE and
-                ent.text not in NER_EXCLUDE and
-                ent.text.lower() not in excluded_entities
-            ):
-                console.print(
-                    f"Line {line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
-                    style="white on blue",
-                    soft_wrap=True,
-                )
-                found_issue = True
-
-    return found_issue
 
 
 def main(argv=None):
@@ -58,9 +43,16 @@ def main(argv=None):
         default=".pii-ner-exclude",
         help="Named Entity Recognition exclude file path. One per line.",
     )
+    parser.add_argument(
+        "exclude_output",
+        nargs="?",
+        default=None,
+        help="File for outputting exclude data to",
+    )
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
     excluded_entities = get_excluded_ner(args.ner_exclude)
+    exclude_file = args.exclude_output
 
     # Exclude custom regex file
     excluded_filenames.append(args.exclude)
@@ -73,46 +65,31 @@ def main(argv=None):
         soft_wrap=True,
     )
 
+    process_ner_file = NERFileProcess(
+        excluded_filenames,
+        excluded_entities,
+    )
+
     for filename in args.filenames:
         _, file_extension = os.path.splitext(filename)
-        if file_extension in IGNORE_EXTENSIONS:
-            pass
-            # console.print(
-            #     f"{filename} ignoring file as extension is ignored by default",
-            #     style="white on blue"
-            # )
-        else:
-            if filename not in excluded_filenames:
-                try:
-                    with open(filename, "r") as f:
-                        try:
-                            console.print(
-                                f"{filename} checking for PII",
-                                style="white on blue",
-                                soft_wrap=True,
-                            )
-                            for i, line in enumerate(f):
-                                if "#PS-IGNORE" in line:
-                                    continue
+        if file_extension not in IGNORE_EXTENSIONS:
+            try:
+                process_ner_file.process_file(filename)
+            except LineUpdatedException:
+                console.print(
+                    "A line marked for ignoring has been changed, please check for sensitive information",
+                    style="red",
+                    soft_wrap=True,
+                )
+                console.print(
+                    "Please write 'y' to confirm line can continue to be ignored",
+                )
+                confirmation = input()
 
-                                if detected_named_entities(line, (i + 1), excluded_entities):
-                                    exit_code = 1
+                if confirmation == "y":
+                    process_ner_file.update_line_hash()
 
-                        except Exception as ex:
-                            # These errors can potentially be ignored
-                            console.print(
-                                f"{filename} error when attempting to parse file content, ex: '{ex}'.",
-                                style="bold red",
-                                soft_wrap=True,
-                            )
-                except EnvironmentError as ex:
-                    # Error out of process if we cannot access file
-                    console.print(
-                        f"{filename} error when attempting to open file, ex: {ex}.",
-                        style="bold red",
-                        soft_wrap=True,
-                    )
-                    exit_code = 1
+                exit_code = 1
 
     return exit_code
 

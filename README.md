@@ -14,6 +14,10 @@ Make sure you run:
  * Add a `.pii-custom-regex` file if needed (explanation below)
  * Add a `.pii-ner-exclude` file if needed (explanation below)
  
+## Tracking exclusions
+A file is written to, which should be included in committed files, which records a hash of
+files checked by the hooks.
+ 
 ## Excluding files with .pii-secret-exclude
 In order to exclude files from the checks add them to this file. HOWEVER, you should 
 heavily favour excluding lines using `#PS-IGNORE`, rather than files.
@@ -49,6 +53,8 @@ In order to run the latest version of these hooks run:
     pre-commit autoupdate
 
 ## TODO
+ * Add exclude output tool (creates text file of possible exclusions)
+ * Add hash of parsed files to file list
  * Group issues at end of output rather than displaying amongst ignore messages
- * Add pdf and office extensions
+ * Add office (and any other relevant) extensions
  * Add help command
