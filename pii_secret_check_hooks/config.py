@@ -217,4 +217,13 @@ NER_EXCLUDE = [
    "AUTO",
    "@require_GET",
    "ContentType",
+   "CustomError",
+   "CSV",
+   "OrderedDict",
+   "PhoneNumberField",
+   "TextInput",
+   "Select",
+   "PasswordInput",
+   "ModelForm",
+   "import pytz",
 ]
