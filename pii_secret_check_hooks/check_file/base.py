@@ -3,14 +3,6 @@ import json
 from pathlib import Path
 
 
-class LineUpdatedException(Exception):
-    pass
-
-
-class LineHashChangedException(Exception):
-    pass
-
-
 class FoundSensitiveException(Exception):
     pass
 
@@ -18,14 +10,19 @@ class FoundSensitiveException(Exception):
 class CheckFileBase:
     BUFF_SIZE = 65536
 
-    def __init__(self, excluded_file_list):
+    def __init__(
+        self,
+        filename,
+        excluded_file_list,
+        log_path=".pii-secret-hook/pii-secret-log",
+    ):
+        self.filename = filename
         self.excluded_file_list = excluded_file_list
+        self.log_path = log_path
         self.log_data = None
 
-        # Load JSON file list
-        log_file = Path(".pii-secret-hook/pii-secret-log")
-        if log_file.is_file():
-            self.log_data = json.load(log_file)
+        with open(self.log_path, 'r+') as json_file:
+            self.log_data = json.load(json_file)
 
     def create_hash(self, filename):
         sha1 = hashlib.sha1()
@@ -48,3 +45,17 @@ class CheckFileBase:
                 return False
 
         return True
+
+    def write_log(self, file_obj):
+        # Create file hash
+        file_obj.seek(0)
+        file_content = file_obj.read()
+        file_sha1 = hashlib.sha1()
+        file_sha1.update(file_content)
+
+        # Write file log
+        self.log_data[self.filename].hash = file_sha1
+
+        log_file = open(self.log_path, "w+")
+        log_file.write(self.log_data)
+        log_file.close()

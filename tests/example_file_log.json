@@ -1,13 +1,13 @@
 {
-    "files": [{
+    "files": {
         "foo/bar/test.py": {
             "hash": "f4eba6fd2173efe51cg711a9f5ac"
         }
-    }],
-    "excluded_lines": [{
+    },
+    "excluded_lines": {
         "foo/bar/test.py": {
             "line": 11,
-            "hash": "3ff4be5bc4av6cfd2173ee51c711a"
+            "hash": "c5d191810c3a09a99f73ca145a4ce34e09a94790"
         }
-    }]
+    }
 }
