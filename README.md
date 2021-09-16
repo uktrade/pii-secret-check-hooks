@@ -58,3 +58,4 @@ In order to run the latest version of these hooks run:
  * Group issues at end of output rather than displaying amongst ignore messages
  * Add office (and any other relevant) extensions
  * Add help command
+ * Make folder for hidden files used in app

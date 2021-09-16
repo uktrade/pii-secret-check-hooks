@@ -1,16 +1,13 @@
 {
-    "excluded_files":[{
-        "name": "John",
-        "hash":"87afhiuha"
-    },],
     "files": [{
-        "adsa/adasd/test.gif": {
-            "hash": "asdadsds"
+        "foo/bar/test.py": {
+            "hash": "f4eba6fd2173efe51cg711a9f5ac"
         }
     }],
     "excluded_lines": [{
-        "file_name": "aad/adsad/asd.test",
-        "line": 11,
-        "hash": "sddasda"
+        "foo/bar/test.py": {
+            "line": 11,
+            "hash": "3ff4be5bc4av6cfd2173ee51c711a"
+        }
     }]
 }

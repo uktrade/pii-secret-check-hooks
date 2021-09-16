@@ -13,11 +13,12 @@ from pii_secret_check_hooks.util import (
     get_excluded_filenames,
     get_excluded_ner,
 )
-from pii_secret_check_hooks.process_file import (
-    NERFileProcess,
+from pii_secret_check_hooks.check_file.base import (
     LineUpdatedException,
     FoundSensitiveException,
 )
+
+from pii_secret_check_hooks.check_file.ner import CheckForNER
 
 nlp = en_core_web_sm.load()
 
@@ -65,7 +66,7 @@ def main(argv=None):
         soft_wrap=True,
     )
 
-    process_ner_file = NERFileProcess(
+    process_ner_file = CheckForNER(
         excluded_filenames,
         excluded_entities,
     )
@@ -76,19 +77,6 @@ def main(argv=None):
             try:
                 process_ner_file.process_file(filename)
             except LineUpdatedException:
-                console.print(
-                    "A line marked for ignoring has been changed, please check for sensitive information",
-                    style="red",
-                    soft_wrap=True,
-                )
-                console.print(
-                    "Please write 'y' to confirm line can continue to be ignored",
-                )
-                confirmation = input()
-
-                if confirmation == "y":
-                    process_ner_file.update_line_hash()
-
                 exit_code = 1
 
     return exit_code

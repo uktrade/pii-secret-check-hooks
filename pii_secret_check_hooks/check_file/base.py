@@ -1,33 +1,6 @@
-import logging
 import hashlib
 import json
 from pathlib import Path
-
-import os
-import argparse
-import spacy
-from rich.console import Console
-import en_core_web_sm
-
-from pii_secret_check_hooks.config import (
-    IGNORE_EXTENSIONS,
-    NER_IGNORE,
-    NER_EXCLUDE,
-)
-from pii_secret_check_hooks.util import (
-    get_excluded_filenames,
-    get_excluded_ner,
-)
-
-from pii_secret_check_hooks.util import (
-    print_error,
-    print_info,
-    print_warning,
-)
-
-nlp = en_core_web_sm.load()
-
-console = Console()
 
 
 class LineUpdatedException(Exception):
@@ -42,10 +15,10 @@ class FoundSensitiveException(Exception):
     pass
 
 
-class BaseFileProcess:
+class CheckFileBase:
     BUFF_SIZE = 65536
 
-    def __init__(self, filename, excluded_file_list):
+    def __init__(self, excluded_file_list):
         self.excluded_file_list = excluded_file_list
         self.log_data = None
 
@@ -75,5 +48,3 @@ class BaseFileProcess:
                 return False
 
         return True
-
-
