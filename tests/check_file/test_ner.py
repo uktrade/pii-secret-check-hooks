@@ -4,24 +4,25 @@ import pytest
 
 
 def create_check():
-    return CheckForNER(
-        filename="foo/bar/test.py",
+    check_for_ner = CheckForNER(
         excluded_file_list=None,
-        excluded_entity_list=None,
-        log_path="tests/example_file_log.json",
+        excluded_ner_entity_list=None,
+        log_path="tests/assets/log_file_unchanged.json",
     )
+    check_for_ner.current_file = "tests/assets/test.txt"
+    return check_for_ner
 
 
 def test_get_line_has_changed():
     check_for_ner = create_check()
-    has_changed = check_for_ner.line_has_changed(
+    has_changed = check_for_ner._line_has_changed(
         line_num=11,
         line="A piece of test text",
     )
 
     assert not has_changed
 
-    has_changed = check_for_ner.line_has_changed(
+    has_changed = check_for_ner._line_has_changed(
         line_num=11,
         line="A different piece of test text",
     )
@@ -32,10 +33,10 @@ def test_get_line_has_changed():
 def test_update_line_hash():
     check_for_ner = create_check()
 
-    check_for_ner.update_line_hash(14, "I am a test")
+    check_for_ner._update_line_hash(14, "I am a test")
 
-    assert check_for_ner.log_data["excluded_lines"]["foo/bar/test.py"]["line"] == 14
-    assert check_for_ner.log_data["excluded_lines"]["foo/bar/test.py"]["hash"] == "c3207bbe306d89116d4058320b086296a43b8964"
+    assert check_for_ner.log_data["excluded_lines"]["tests/assets/test.txt"]["line"] == 14
+    assert check_for_ner.log_data["excluded_lines"]["tests/assets/test.txt"]["hash"] == "c3207bbe306d89116d4058320b086296a43b8964"
 
 
 @patch('pii_secret_check_hooks.check_file.ner.input', return_value='y')

@@ -45,7 +45,7 @@ def main(argv=None):
         help="Named Entity Recognition exclude file path. One per line.",
     )
     parser.add_argument(
-        "exclude_output",
+        "exclude_output_file",
         nargs="?",
         default=None,
         help="File for outputting exclude data to",
@@ -53,7 +53,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
     excluded_entities = get_excluded_ner(args.ner_exclude)
-    exclude_file = args.exclude_output
+    exclude_output_file = args.exclude_output_file
 
     # Exclude custom regex file
     excluded_filenames.append(args.exclude)
@@ -69,15 +69,11 @@ def main(argv=None):
     process_ner_file = CheckForNER(
         excluded_filenames,
         excluded_entities,
+        exclude_output_file,
     )
 
-    for filename in args.filenames:
-        _, file_extension = os.path.splitext(filename)
-        if file_extension not in IGNORE_EXTENSIONS:
-            try:
-                process_ner_file.process_file(filename)
-            except LineUpdatedException:
-                exit_code = 1
+    if process_ner_file.process_files(args.filenames):
+        return 1
 
     return exit_code
 

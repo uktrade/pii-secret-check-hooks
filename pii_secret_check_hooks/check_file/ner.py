@@ -6,6 +6,7 @@ import en_core_web_sm
 from pii_secret_check_hooks.config import (
     NER_IGNORE,
     NER_EXCLUDE,
+    LINE_MARKER,
 )
 
 from pii_secret_check_hooks.util import (
@@ -30,6 +31,10 @@ class LineHashChangedException(Exception):
     pass
 
 
+class NoExcludeFilePassedException(Exception):
+    pass
+
+
 class CheckForNER(CheckFileBase):
     replace_lines = []
     current_line_num = 0
@@ -37,18 +42,19 @@ class CheckForNER(CheckFileBase):
 
     def __init__(
         self,
-        filename,
         excluded_file_list,
-        excluded_entity_list,
+        excluded_ner_entity_list,
+        exclude_output_file=None,
         interactive=True,
         log_path=".pii-secret-hook/pii-secret-log",
     ):
-        self.excluded_entity_list = excluded_entity_list
+        self.excluded_ner_entity_list = excluded_ner_entity_list
+        self.exclude_output_file = exclude_output_file
         self.interactive = interactive
-        self.filename = filename
-        super(CheckForNER, self).__init__(filename, excluded_file_list, log_path)
+        self.entity_list = []
+        super(CheckForNER, self).__init__(excluded_file_list, log_path)
 
-    def detect_named_entities(self, line, line_num, excluded_entities):
+    def _detect_named_entities(self, line, line_num):
         doc = nlp(line)
         found_issue = False
         if doc.ents:
@@ -56,86 +62,71 @@ class CheckForNER(CheckFileBase):
                 if (
                     ent.label_ not in NER_IGNORE and
                     ent.text not in NER_EXCLUDE and
-                    ent.text.lower() not in excluded_entities
+                    ent.text.lower() not in self.excluded_ner_entity_list
                 ):
                     print_info(
                         f"Line {line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
                     )
+                    self.entity_list.append(ent.text)
                     found_issue = True
 
         return found_issue
 
     # Check to see if line (without hash) matches hash
-    def line_has_changed(self, line_num, line):
-        if self.filename in self.log_data["excluded_lines"]:
-            file_info = self.log_data["excluded_lines"][self.filename]
+    def _line_has_changed(self, line_num, line):
+        if self.current_file in self.log_data["excluded_lines"]:
+            file_info = self.log_data["excluded_lines"][self.current_file]
             if file_info["line"] == line_num:
                 line_sha1 = hashlib.sha1()
                 line_sha1.update(
-                    line.encode('utf-8'),
+                    line.encode("utf-8"),
                 )
                 if file_info["hash"] == line_sha1.hexdigest():
                     return False
 
         return True
 
-    def update_line_hash(self, line_num, line):
+    def _update_line_hash(self, line_num, line):
         line_sha1 = hashlib.sha1()
         line_sha1.update(
             line.encode('utf-8'),
         )
 
-        self.log_data["excluded_lines"][self.filename]["line"] = line_num
-        self.log_data["excluded_lines"][self.filename]["hash"] = line_sha1.hexdigest()
+        self.log_data["excluded_lines"][self.current_file]["line"] = line_num
+        self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
+
+    def generate_exclude_file(self):
+        if not self.exclude_output_file:
+            raise NoExcludeFilePassedException()
+
+        exclude_file = open(self.exclude_output_file, "w")
+        for entity in self.entity_list:
+            exclude_file.write(f"{entity}\n")
+        exclude_file.close()
 
     def process_file_content(self, file_object):
         for i, line in enumerate(file_object):
-            if "#PS-IGNORE" in line:
-                if not self.line_has_changed(i, line):
+            if LINE_MARKER in line:
+                if not self._line_has_changed(i, line):
                     continue
                 elif self.interactive:
                     print_warning(
                         line
                     )
                     print_error(
-                        f"{self.filename} line marked for exclusion. Please confirm by "
+                        f"{self.current_file} line marked for exclusion. Please confirm by "
                         f"typing 'y' that there is no sensitive information present",
                     )
                     confirmation = input()
                     if confirmation == "y":
-                        self.update_line_hash(i + 1, line)
+                        self._update_line_hash(i + 1, line)
                     else:
                         raise LineHashChangedException()
                 else:
                     raise LineHashChangedException()
             else:
-                if self.detect_named_entities(
+                if self._detect_named_entities(
                     line,
                     self.current_line_num,
-                    self.excluded_entity_list
                 ):
                     raise FoundSensitiveException()
-
-    def process_file(self):
-        if self.filename not in self.excluded_file_list:
-            if self.file_changed(self.filename):
-                with open(self.filename, "r+") as f:
-                    try:
-                        print_info(
-                            f"{self.filename} checking for sensitive data",
-                        )
-                        self.process_file_content(f)
-                    except LineHashChangedException as ex:
-                        # These errors can potentially be ignored
-                        print_error(
-                            f"{self.filename} line has changed and has not been confirmed"
-                            f" as non sensitive. Existing file processing.",
-                        )
-                        raise LineHashChangedException()
-                    except Exception as ex:
-                        # These errors can potentially be ignored
-                        print_error(
-                            f"{self.filename} error when attempting to parse file content, ex: '{ex}'.",
-                        )
-
-                self.write_log(f)
