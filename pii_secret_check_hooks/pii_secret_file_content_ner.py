@@ -1,26 +1,12 @@
-import os
 import argparse
-import spacy
 from rich.console import Console
-import en_core_web_sm
 
-from pii_secret_check_hooks.config import (
-    IGNORE_EXTENSIONS,
-    NER_IGNORE,
-    NER_EXCLUDE,
-)
 from pii_secret_check_hooks.util import (
     get_excluded_filenames,
     get_excluded_ner,
 )
-from pii_secret_check_hooks.check_file.base import (
-    LineUpdatedException,
-    FoundSensitiveException,
-)
-
 from pii_secret_check_hooks.check_file.ner import CheckForNER
 
-nlp = en_core_web_sm.load()
 
 console = Console()
 
@@ -58,8 +44,6 @@ def main(argv=None):
     # Exclude custom regex file
     excluded_filenames.append(args.exclude)
 
-    exit_code = 0
-
     console.print(
         "Using spaCY NER (https://spacy.io/) for PII checks",
         style="white on blue",
@@ -75,7 +59,7 @@ def main(argv=None):
     if process_ner_file.process_files(args.filenames):
         return 1
 
-    return exit_code
+    return 0
 
 
 if __name__ == "__main__":

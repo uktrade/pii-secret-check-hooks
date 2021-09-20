@@ -3,15 +3,11 @@ import re
 from rich.console import Console
 
 from pii_secret_check_hooks.util import get_excluded_filenames
-from pii_secret_check_hooks.config import FILENAME_REGEX
+from pii_secret_check_hooks.check_file.file_name import (
+    check_file_names,
+)
 
 console = Console()
-
-
-def detect_match_against_filename(filename, file_name_regex):
-    for regex in file_name_regex:
-        if re.search(regex, filename):
-            return regex
 
 
 def main(argv=None):
@@ -24,23 +20,12 @@ def main(argv=None):
         help="Exclude file path",
     )
     args = parser.parse_args(argv)
-
     excluded_filenames = get_excluded_filenames(args.exclude)
 
-    exit_code = 0
+    if check_file_names(args.filenames, excluded_filenames):
+        return 1
 
-    for filename in args.filenames:
-        if filename not in excluded_filenames:
-            match = detect_match_against_filename(filename, FILENAME_REGEX)
-            if match:
-                exit_code = 1
-                console.print(
-                    f"{filename} may contain sensitive information due to the file type",
-                    style="bold red",
-                    soft_wrap=True,
-                )
-
-    return exit_code
+    return 0
 
 
 if __name__ == "__main__":

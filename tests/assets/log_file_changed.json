@@ -7,7 +7,7 @@
     "excluded_lines": {
         "tests/assets/test.txt": {
             "line": 11,
-            "hash": "c5d191810c3a09a99f73ca145a4ce34e09a94790"
+            "hash": "f5d19110c3a09a99fv3ca145a4ce34e09a94790"
         }
     }
 }
