@@ -12,11 +12,13 @@ from truffleHog.truffleHog import (
 )
 
 from pii_secret_check_hooks.config import PII_REGEX
-
 from pii_secret_check_hooks.check_file.base_content_check import (
     CheckFileBase,
 )
-
+from pii_secret_check_hooks.util import (
+    print_error,
+    print_warning,
+)
 
 nlp = en_core_web_sm.load()
 
@@ -82,10 +84,8 @@ class CheckFileContent(CheckFileBase):
                 if re.search(pii_regex, line.lower()):
                     return pii_key
             except re.error as ex:
-                console.print(
+                print_error(
                     f"PII regex error for {pii_key} regex: '{ex}",
-                    style="white on blue",
-                    soft_wrap=True,
                 )
                 return None
 
@@ -100,27 +100,37 @@ class CheckFileContent(CheckFileBase):
                 if re.search(custom_regex, line.lower()):
                     return f"'{regex_name}'"
             except re.error as ex:
-                console.print(
+                print_error(
                     f"Custom regex error for '{custom_regex}' regex: '{ex}'",
-                    style="white on blue",
-                    soft_wrap=True,
                 )
                 return None
 
     def process_line(self, line):
         trufflehog_check = self._trufflehog_check(line)
         if trufflehog_check:
-            return trufflehog_check
+            print_warning(
+                f"Line {self.current_line_num}, '{trufflehog_check}' check failed",
+            )
+            return True
 
         if self._entropy_check(line):
-            return "'entropy check failed'"
+            print_warning(
+                f"Line {self.current_line_num}, entropy check failed",
+            )
+            return True
 
-        pii_check = self._pii_regex(line)
-        if pii_check:
-            return self._pii_regex(line)
+        pii_check_result = self._pii_regex(line)
+        if pii_check_result:
+            print_warning(
+                f"Line {self.current_line_num}, '{pii_check_result}' check failed",
+            )
+            return True
 
         custom_regex_check = self._custom_regex_checks(line)
         if custom_regex_check:
-            return custom_regex_check
+            print_warning(
+                f"Line {self.current_line_num}, '{custom_regex_check}' check failed",
+            )
+            return True
 
         return None

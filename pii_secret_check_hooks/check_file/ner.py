@@ -7,7 +7,7 @@ from pii_secret_check_hooks.config import (
 )
 
 from pii_secret_check_hooks.util import (
-    print_info,
+    print_warning,
 )
 
 from pii_secret_check_hooks.check_file.base_content_check import (
@@ -63,7 +63,7 @@ class CheckForNER(CheckFileBase):
                     ent.text not in NER_EXCLUDE and
                     ent.text.lower() not in self.excluded_ner_entity_list
                 ):
-                    print_info(
+                    print_warning(
                         f"Line {self.current_line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
                     )
                     self.entity_list.append(ent.text)

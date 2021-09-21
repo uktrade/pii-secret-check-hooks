@@ -91,10 +91,6 @@ class CheckFileBase(ABC):
             existing_file_hash = self.log_data["files"][self.current_file]["hash"]
             if existing_file_hash == file_hash:
                 return False
-        else:
-            self.log_data["files"][self.current_file] = {
-                "hash": file_hash
-            }
 
         return True
 
@@ -169,6 +165,7 @@ class CheckFileBase(ABC):
     def _process_file_content(self, file_object) -> bool:
         found_issue = False
         for i, line in enumerate(file_object):
+            self.current_line_num = i + 1
             if LINE_MARKER in line:
                 if not self._line_has_changed(i, line):
                     continue
