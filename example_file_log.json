@@ -1,0 +1,16 @@
+{
+    "files": {
+        "foo/bar/test.py": {
+            "hash": "f4eba6fd2173efe51cg711a9f5ac"
+        },
+        "tests/test.txt": {
+            "hash": "f4eba6fd2173efe51cg711a9f5ac"
+        }
+    },
+    "excluded_lines": {
+        "foo/bar/test.py": {
+            "line": 11,
+            "hash": "c5d191810c3a09a99f73ca145a4ce34e09a94790"
+        }
+    }
+}

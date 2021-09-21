@@ -1,0 +1,13 @@
+{
+    "files": {
+        "tests/assets/test.txt": {
+            "hash": "291f89e4b12779a5cbef6f508f5e593dea9dd9b4"
+        }
+    },
+    "excluded_lines": {
+        "tests/assets/test.txt": {
+            "line": 11,
+            "hash": "c5d191810c3a09a99f73ca145a4ce34e09a94790"
+        }
+    }
+}

@@ -1,5 +1,9 @@
 import logging
 from pathlib import Path
+from rich.console import Console
+
+
+console = Console()
 
 
 def _get_file_content_as_list(file_path, file_type, lower=False):
@@ -34,3 +38,27 @@ def get_excluded_filenames(file_path):
 
 def get_excluded_ner(file_path):
     return _get_file_content_as_list(file_path, "exclude NER", lower=True)
+
+
+def print_error(message):
+    console.print(
+        message,
+        style="bold red",
+        soft_wrap=True,
+    )
+
+
+def print_info(message):
+    console.print(
+        message,
+        style="white on blue",
+        soft_wrap=True,
+    )
+
+
+def print_warning(message):
+    console.print(
+        message,
+        style="white on green",
+        soft_wrap=True,
+    )
