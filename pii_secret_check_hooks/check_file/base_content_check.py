@@ -34,16 +34,17 @@ class CheckFileBase(ABC):
 
     def __init__(
         self,
+        check_name,
         excluded_file_list,
         exclude_output_file=None,
     ):
         self.excluded_file_list = excluded_file_list
         self.exclude_output_file = exclude_output_file
-        self.log_path = ".pii-secret-hook/pii-secret-log"
+        self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
 
         if self.log_path:
-            Path(".pii-secret-hook").mkdir(parents=True, exist_ok=True)
+            Path(f".pii-secret-hook/{check_name}").mkdir(parents=True, exist_ok=True)
 
             with open(self.log_path, 'a+') as json_file:
                 try:
@@ -85,10 +86,15 @@ class CheckFileBase(ABC):
         return False
 
     def _file_changed(self, file_obj) -> bool:
+        file_hash = self._create_file_hash(file_obj)
         if self.current_file in self.log_data["files"]:
-            file_hash = self.log_data["files"][self.current_file]["hash"]
-            if file_hash == self._create_file_hash(file_obj):
+            existing_file_hash = self.log_data["files"][self.current_file]["hash"]
+            if existing_file_hash == file_hash:
                 return False
+        else:
+            self.log_data["files"][self.current_file] = {
+                "hash": file_hash
+            }
 
         return True
 
@@ -112,8 +118,14 @@ class CheckFileBase(ABC):
             line.encode('utf-8'),
         )
 
-        self.log_data["excluded_lines"][self.current_file]["line"] = line_num
-        self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
+        if self.current_file in self.log_data["excluded_lines"]:
+            self.log_data["excluded_lines"][self.current_file] = {
+                "hash": line_sha1.hexdigest(),
+                "line": line_num,
+            }
+        else:
+            self.log_data["excluded_lines"][self.current_file]["line"] = line_num
+            self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
 
     def _process_file(self, filename) -> bool:
         found_issue = False
@@ -185,10 +197,6 @@ class CheckFileBase(ABC):
                     found_issue = True
             else:
                 if self.process_line(line):
-                    print_error(
-                        f"Found potentially sensitive information in line",
-                    )
-                    print_info(line.strip())
                     found_issue = True
 
         return found_issue

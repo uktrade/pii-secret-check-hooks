@@ -1,11 +1,9 @@
 import hashlib
 import json
 from unittest.mock import MagicMock, patch
-import pytest
 
 from pii_secret_check_hooks.check_file.base_content_check import (
     CheckFileBase,
-    LineHashChangedException,
 )
 from pii_secret_check_hooks.config import IGNORE_EXTENSIONS
 
@@ -22,6 +20,7 @@ def load_json(file_path):
 
 def create_base():
     check_base = CheckFileBaseTest(
+        check_name="test_base",
         excluded_file_list=None,
     )
     check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
@@ -30,6 +29,7 @@ def create_base():
 
 def create_test_base_for_line_test():
     check_base = CheckFileBaseTest(
+        check_name="test_base",
         excluded_file_list=None,
     )
     check_base.interactive = True
@@ -71,12 +71,14 @@ def test_file_excluded():
 
 def test_file_changed():
     check_base = CheckFileBaseTest(
+        check_name="test_base",
         excluded_file_list=None,
     )
     check_base.log_data = load_json("tests/assets/log_file_changed.json")
     check_base.current_file = "tests/assets/test.txt"
 
     check_base_1 = CheckFileBaseTest(
+        check_name="test_base",
         excluded_file_list=None,
     )
     check_base_1.log_data = load_json("tests/assets/log_file_unchanged.json")
@@ -92,8 +94,23 @@ def test_file_changed():
         )
 
 
+def test_file_changed_file_added():
+    check_base = CheckFileBaseTest(
+        check_name="test_base",
+        excluded_file_list=None,
+    )
+    check_base.log_data = load_json("tests/assets/log_file_changed.json")
+    check_base.current_file = "tests/assets/test-1.txt"
+
+    with open("tests/assets/test-1.txt", 'r', encoding='utf-8') as test_file:
+        assert check_base._file_changed(
+            test_file,
+        )
+
+
 def test_line_has_changed():
     check_base = CheckFileBaseTest(
+        check_name="test_base",
         excluded_file_list=None,
     )
     check_base.current_file = "tests/assets/test.txt"

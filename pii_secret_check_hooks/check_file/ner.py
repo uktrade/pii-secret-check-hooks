@@ -48,6 +48,7 @@ class CheckForNER(CheckFileBase):
         self.entity_list = []
 
         super(CheckForNER, self).__init__(
+            "ner",
             excluded_file_list,
             exclude_output_file,
         )

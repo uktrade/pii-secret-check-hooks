@@ -48,6 +48,7 @@ class CheckFileContent(CheckFileBase):
         self.interactive = interactive
 
         super(CheckFileContent, self).__init__(
+            "file_content",
             excluded_file_list,
             exclude_output_file,
         )
