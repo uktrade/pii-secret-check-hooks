@@ -148,8 +148,8 @@ class CheckFileBase(ABC):
                     if self._process_file(filename):
                         found_issues = True
 
-        log_file = open(self.log_path, "w")  # w+ ?
-        log_file.write(self.log_data)
+        log_file = open(self.log_path, "w")
+        log_file.write(json.dumps(self.log_data))
         log_file.close()
 
         return found_issues
@@ -185,10 +185,10 @@ class CheckFileBase(ABC):
                     found_issue = True
             else:
                 if self.process_line(line):
-                    print_info(line.strip())
                     print_error(
                         f"Found potentially sensitive information in line",
                     )
+                    print_info(line.strip())
                     found_issue = True
 
         return found_issue
