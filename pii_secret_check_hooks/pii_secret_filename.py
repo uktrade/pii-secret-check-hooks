@@ -1,13 +1,9 @@
 import argparse
-import re
-from rich.console import Console
 
 from pii_secret_check_hooks.util import get_excluded_filenames
 from pii_secret_check_hooks.check_file.file_name import (
     check_file_names,
 )
-
-console = Console()
 
 
 def main(argv=None):
