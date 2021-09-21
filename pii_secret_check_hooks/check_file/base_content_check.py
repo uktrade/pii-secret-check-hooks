@@ -42,7 +42,7 @@ class CheckFileBase(ABC):
         self.log_data = {}
 
         if self.log_path:
-            with open(self.log_path, 'r+') as json_file:
+            with open(self.log_path, 'a+') as json_file:
                 self.log_data = json.load(json_file)
 
         super().__init__()
