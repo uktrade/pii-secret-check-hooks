@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
-from codecs import open
-import os
 
 
 def read(filename):
-    return open(os.path.join(os.path.dirname(__file__), filename)).read()
+    with open(filename, "r") as fh:
+        return fh.read()
 
 
 setup(
@@ -25,13 +24,12 @@ setup(
     },
     packages=find_packages(),
     install_requires=[
-        "truffleHogRegexes",
+        "setuptools",
+        "wheel",
         "requests",
         "truffleHog",
         "pyyaml",
         "rich",
-        "setuptools",
-        "wheel",
         "spacy",
         "en_core_web_sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.1.0/en_core_web_sm-3.1.0.tar.gz",
     ],

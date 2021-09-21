@@ -120,10 +120,7 @@ class CheckFileContent(CheckFileBase):
         if pii_check:
             return self._pii_regex(line)
 
-        custom_regex_check = self._custom_regex_checks(
-            line,
-        )
-
+        custom_regex_check = self._custom_regex_checks(line)
         if custom_regex_check:
             return custom_regex_check
 

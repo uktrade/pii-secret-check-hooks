@@ -9,20 +9,20 @@ from pii_secret_check_hooks.check_file.base_content_check import (
 from pii_secret_check_hooks.config import IGNORE_EXTENSIONS
 
 
-class TestBase(CheckFileBase):
+class CheckFileBaseTest(CheckFileBase):
     def process_line(self, line):
         pass
 
 
 def create_base():
-    return TestBase(
+    return CheckFileBaseTest(
         excluded_file_list=None,
         log_path="tests/assets/log_file_unchanged.json",
     )
 
 
 def create_test_base_for_line_test():
-    check_base = TestBase(
+    check_base = CheckFileBaseTest(
         excluded_file_list=None,
         log_path=None,
     )
@@ -64,13 +64,13 @@ def test_file_excluded():
 
 
 def test_file_changed():
-    check_base = TestBase(
+    check_base = CheckFileBaseTest(
         excluded_file_list=None,
         log_path="tests/assets/log_file_changed.json",
     )
     check_base.current_file = "tests/assets/test.txt"
 
-    check_base_1 = TestBase(
+    check_base_1 = CheckFileBaseTest(
         excluded_file_list=None,
         log_path="tests/assets/log_file_unchanged.json",
     )
@@ -87,7 +87,7 @@ def test_file_changed():
 
 
 def test_line_has_changed():
-    check_base = TestBase(
+    check_base = CheckFileBaseTest(
         excluded_file_list=None,
         log_path="tests/assets/log_file_unchanged.json",
     )

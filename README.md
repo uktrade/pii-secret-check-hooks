@@ -19,7 +19,7 @@ A file is written to, which should be included in committed files, which records
 files checked by the hooks.
  
 ## Excluding files with .pii-secret-exclude
-In order to exclude files from the checks add them to this file. HOWEVER, you should 
+In order to exclude files from the checks, add them to this file. HOWEVER, you should 
 heavily favour excluding lines using `#PS-IGNORE`, rather than files.
 
 ## Adding your own regular expressions with .pii-custom-regex
@@ -53,9 +53,6 @@ In order to run the latest version of these hooks run:
     pre-commit autoupdate
 
 ## TODO
- * Add exclude output tool (creates text file of possible exclusions)
- * Add hash of parsed files to file list
  * Group issues at end of output rather than displaying amongst ignore messages
  * Add office (and any other relevant) extensions
  * Add help command
- * Make folder for hidden files used in app
