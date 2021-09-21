@@ -126,11 +126,17 @@ class CheckFileBase(ABC):
                     )
                     found_issue = self._process_file_content(f)
 
-                    # Create file hash
-                    file_hash = self._create_file_hash(f)
+                    if not found_issue:
+                        # If no issue was found, create and save file hash
+                        file_hash = self._create_file_hash(f)
 
-                    # Set file entry in file log
-                    self.log_data[self.current_file]["hash"] = file_hash
+                        # Set file entry in file log
+                        if self.current_file not in self.log_data["files"]:
+                            self.log_data["files"][self.current_file] = {
+                                "hash": ""
+                            }
+
+                        self.log_data["files"][self.current_file]["hash"] = file_hash
 
         return found_issue
 
@@ -139,9 +145,6 @@ class CheckFileBase(ABC):
         for filename in filenames:
             if not self._file_extension_excluded(filename):
                 if not self._file_excluded(filename):
-                    print_info(
-                        f"{filename} checking lines..."
-                    )
                     if self._process_file(filename):
                         found_issues = True
 
@@ -159,7 +162,7 @@ class CheckFileBase(ABC):
                     continue
                 elif self.interactive:
                     print_warning(
-                        line
+                        line.strip()
                     )
                     print_info(
                         "Line marked for exclusion. Please type 'y' to confirm "
@@ -175,16 +178,16 @@ class CheckFileBase(ABC):
                         )
                         found_issue = True
                 else:
-                    print_info(line)
+                    print_info(line.strip())
                     print_error(
                         f"Line has been updated since last check",
                     )
                     found_issue = True
             else:
                 if self.process_line(line):
-                    print_info(line)
+                    print_info(line.strip())
                     print_error(
-                        f"Found sensitive information in line",
+                        f"Found potentially sensitive information in line",
                     )
                     found_issue = True
 
