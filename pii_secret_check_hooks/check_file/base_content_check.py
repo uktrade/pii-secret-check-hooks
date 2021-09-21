@@ -2,6 +2,7 @@ import os
 import hashlib
 import json
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 from pii_secret_check_hooks.config import (
     LINE_MARKER,
@@ -34,18 +35,28 @@ class CheckFileBase(ABC):
         self,
         excluded_file_list,
         exclude_output_file=None,
-        log_path=".pii-secret-hook/pii-secret-log",
     ):
         self.excluded_file_list = excluded_file_list
         self.exclude_output_file = exclude_output_file
-        self.log_path = log_path
-        self.log_data = {}
+        self.log_path = ".pii-secret-hook/pii-secret-log"
+        self.log_data = self._get_empty_log()
 
         if self.log_path:
+            Path(".pii-secret-hook").mkdir(parents=True, exist_ok=True)
+
             with open(self.log_path, 'a+') as json_file:
-                self.log_data = json.load(json_file)
+                try:
+                    self.log_data = json.load(json_file)
+                except json.decoder.JSONDecodeError:
+                    self.log_data = self._get_empty_log()
 
         super().__init__()
+
+    def _get_empty_log(self):
+        return {
+            "files": {},
+            "excluded_lines": {},
+        }
 
     def _create_file_hash(self, file_obj) -> str:
         file_obj.seek(0)

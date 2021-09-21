@@ -43,7 +43,6 @@ class CheckFileContent(CheckFileBase):
         custom_regex_list,
         exclude_output_file=None,
         interactive=True,
-        log_path=".pii-secret-hook/pii-secret-log",
     ):
         self.custom_regex_list = custom_regex_list
         self.interactive = interactive
@@ -51,7 +50,6 @@ class CheckFileContent(CheckFileBase):
         super(CheckFileContent, self).__init__(
             excluded_file_list,
             exclude_output_file,
-            log_path,
         )
 
     def _entropy_check(self, line):

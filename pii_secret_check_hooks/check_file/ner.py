@@ -41,7 +41,6 @@ class CheckForNER(CheckFileBase):
         excluded_ner_entity_list,
         exclude_output_file=None,
         interactive=True,
-        log_path=".pii-secret-hook/pii-secret-log",
     ):
         self.excluded_ner_entity_list = excluded_ner_entity_list
         self.exclude_output_file = exclude_output_file
@@ -51,7 +50,6 @@ class CheckForNER(CheckFileBase):
         super(CheckForNER, self).__init__(
             excluded_file_list,
             exclude_output_file,
-            log_path,
         )
 
     def process_line(self, line):

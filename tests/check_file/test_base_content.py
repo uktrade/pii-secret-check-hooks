@@ -1,4 +1,5 @@
 import hashlib
+import json
 from unittest.mock import MagicMock, patch
 import pytest
 
@@ -14,17 +15,22 @@ class CheckFileBaseTest(CheckFileBase):
         pass
 
 
+def load_json(file_path):
+    with open(file_path, 'r') as json_file:
+        return json.load(json_file)
+
+
 def create_base():
-    return CheckFileBaseTest(
+    check_base = CheckFileBaseTest(
         excluded_file_list=None,
-        log_path="tests/assets/log_file_unchanged.json",
     )
+    check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
+    return check_base
 
 
 def create_test_base_for_line_test():
     check_base = CheckFileBaseTest(
         excluded_file_list=None,
-        log_path=None,
     )
     check_base.interactive = True
     check_base.log_data["excluded_lines"] = {
@@ -66,14 +72,14 @@ def test_file_excluded():
 def test_file_changed():
     check_base = CheckFileBaseTest(
         excluded_file_list=None,
-        log_path="tests/assets/log_file_changed.json",
     )
+    check_base.log_data = load_json("tests/assets/log_file_changed.json")
     check_base.current_file = "tests/assets/test.txt"
 
     check_base_1 = CheckFileBaseTest(
         excluded_file_list=None,
-        log_path="tests/assets/log_file_unchanged.json",
     )
+    check_base_1.log_data = load_json("tests/assets/log_file_unchanged.json")
     check_base_1.current_file = "tests/assets/test.txt"
 
     with open("tests/assets/test.txt", 'r', encoding='utf-8') as test_file:
@@ -89,9 +95,9 @@ def test_file_changed():
 def test_line_has_changed():
     check_base = CheckFileBaseTest(
         excluded_file_list=None,
-        log_path="tests/assets/log_file_unchanged.json",
     )
     check_base.current_file = "tests/assets/test.txt"
+    check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
 
     assert not check_base._line_has_changed(
         line_num=11,

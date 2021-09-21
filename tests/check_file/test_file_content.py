@@ -7,7 +7,6 @@ def test_entropy_check():
     check_file_content = CheckFileContent(
         excluded_file_list=None,
         custom_regex_list=None,
-        log_path=None,
     )
 
     assert check_file_content._entropy_check(
@@ -24,7 +23,6 @@ def test_trufflehog_check():
     check_file_content = CheckFileContent(
         excluded_file_list=None,
         custom_regex_list=None,
-        log_path=None,
     )
 
     # Use AWS key string as regex is present in TruffleHog regex project
@@ -37,7 +35,6 @@ def test_pii_regex():
     check_file_content = CheckFileContent(
         excluded_file_list=None,
         custom_regex_list=None,
-        log_path=None,
     )
 
     assert check_file_content._pii_regex(
@@ -55,7 +52,6 @@ def test_custom_regex_checks():
         custom_regex_list=[
             "dog name=(\s*)dog(\s*)name(\s*)"
         ],
-        log_path=None,
     )
 
     assert check_file_content._custom_regex_checks(
