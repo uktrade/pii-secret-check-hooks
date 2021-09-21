@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pii_secret_check_hooks.config import (
     LINE_MARKER,
+    IGNORE_EXTENSIONS,
 )
 
 from pii_secret_check_hooks.util import (
@@ -70,15 +71,15 @@ class CheckFileBase(ABC):
 
         return sha1.hexdigest()
 
-    def _file_extension_excluded(self, filename, ignore_extensions) -> bool:
+    def _file_extension_excluded(self, filename) -> bool:
         _, file_extension = os.path.splitext(filename)
-        if file_extension in ignore_extensions:
+        if file_extension in IGNORE_EXTENSIONS:
             return True
 
         return False
 
-    def _file_excluded(self, filename, exclude_list) -> bool:
-        if filename in exclude_list:
+    def _file_excluded(self, filename) -> bool:
+        if filename in self.excluded_file_list:
             return True
 
         return False
@@ -92,7 +93,7 @@ class CheckFileBase(ABC):
         return True
 
     # Check to see if line (without hash) matches hash
-    def _line_has_changed(self, line_num, line):
+    def _line_has_changed(self, line_num, line) -> bool:
         if self.current_file in self.log_data["excluded_lines"]:
             file_info = self.log_data["excluded_lines"][self.current_file]
             if file_info["line"] == line_num:
@@ -105,7 +106,7 @@ class CheckFileBase(ABC):
 
         return True
 
-    def _update_line_hash(self, line_num, line):
+    def _update_line_hash(self, line_num, line) -> None:
         line_sha1 = hashlib.sha1()
         line_sha1.update(
             line.encode('utf-8'),
@@ -123,22 +124,24 @@ class CheckFileBase(ABC):
                     print_info(
                         f"{filename} checking for sensitive data",
                     )
-                    # Trap exceptions to this func call in enclosing logic
                     found_issue = self._process_file_content(f)
 
                     # Create file hash
                     file_hash = self._create_file_hash(f)
 
                     # Set file entry in file log
-                    self.log_data[self.current_file].hash = file_hash
+                    self.log_data[self.current_file]["hash"] = file_hash
 
         return found_issue
 
     def process_files(self, filenames) -> bool:
         found_issues = False
         for filename in filenames:
-            if not self._file_extension_excluded():
-                if not self._file_excluded():
+            if not self._file_extension_excluded(filename):
+                if not self._file_excluded(filename):
+                    print_info(
+                        f"{filename} checking lines..."
+                    )
                     if self._process_file(filename):
                         found_issues = True
 
@@ -148,7 +151,8 @@ class CheckFileBase(ABC):
 
         return found_issues
 
-    def _process_file_content(self, file_object):
+    def _process_file_content(self, file_object) -> bool:
+        found_issue = False
         for i, line in enumerate(file_object):
             if LINE_MARKER in line:
                 if not self._line_has_changed(i, line):
@@ -157,20 +161,34 @@ class CheckFileBase(ABC):
                     print_warning(
                         line
                     )
-                    print_error(
-                        f"{self.current_file} line marked for exclusion. Please confirm by "
-                        f"typing 'y' that there is no sensitive information present",
+                    print_info(
+                        "Line marked for exclusion. Please type 'y' to confirm "
+                        "that there is no sensitive information present",
                     )
                     confirmation = input()
                     if confirmation == "y":
                         self._update_line_hash(i + 1, line)
                     else:
-                        raise LineHashChangedException()
+                        print_info(line)
+                        print_error(
+                            f"Line has been updated since last check",
+                        )
+                        found_issue = True
                 else:
-                    raise LineHashChangedException()
+                    print_info(line)
+                    print_error(
+                        f"Line has been updated since last check",
+                    )
+                    found_issue = True
             else:
                 if self.process_line(line):
-                    raise FoundSensitiveException()
+                    print_info(line)
+                    print_error(
+                        f"Found sensitive information in line",
+                    )
+                    found_issue = True
+
+        return found_issue
 
     @abstractmethod
     def process_line(self, line):

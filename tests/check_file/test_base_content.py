@@ -60,13 +60,13 @@ def test_file_extension_excluded():
     test_filename = f"test{IGNORE_EXTENSIONS[0]}"
     assert check_base._file_extension_excluded(
         test_filename,
-        IGNORE_EXTENSIONS,
     )
 
 
 def test_file_excluded():
     check_base = create_base()
-    assert check_base._file_excluded("excluded.txt", ["excluded.txt"])
+    check_base.excluded_file_list = ["excluded.txt"]
+    assert check_base._file_excluded("excluded.txt")
 
 
 def test_file_changed():
@@ -140,5 +140,5 @@ def test_process_file_content_input_not_y(mock_input):
     mock = MagicMock()
     mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
 
-    with pytest.raises(LineHashChangedException):
-        check_base._process_file_content(mock)
+    found_issue = check_base._process_file_content(mock)
+    assert found_issue
