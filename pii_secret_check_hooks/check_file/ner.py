@@ -74,6 +74,8 @@ class CheckForNER(CheckFileBase):
     def after_run(self) -> None:
         if self.exclude_output_file:
             self._generate_exclude_file()
+        else:
+            print_info("No exclude file provided")
 
     def _generate_exclude_file(self) -> None:
         if not self.exclude_output_file:

@@ -46,6 +46,9 @@ def main(argv=None):
         "Using spaCY NER (https://spacy.io/) for PII checks",
     )
 
+    if exclude_output_file:
+        print_info(f"Exclude file {exclude_output_file} provided")
+
     process_ner_file = CheckForNER(
         excluded_filenames,
         excluded_entities,
