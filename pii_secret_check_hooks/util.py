@@ -41,32 +41,44 @@ def get_excluded_ner(file_path):
 
 
 def print_error(message):
-    console.print(
-        message,
-        style="bold #d3391f",
-        soft_wrap=True,
-    )
+    try:
+        console.print(
+            message,
+            style="bold #d3391f",
+            soft_wrap=True,
+        )
+    except Exception:
+        print(message)
 
 
 def print_info(message):
-    console.print(
-        message,
-        style="bold #427b0b",
-        soft_wrap=True,
-    )
+    try:
+        console.print(
+            message,
+            style="bold #427b0b",
+            soft_wrap=True,
+        )
+    except Exception:
+        print(message)
 
 
 def print_warning(message):
-    console.print(
-        message,
-        style="bold #d68300",
-        soft_wrap=True,
-    )
+    try:
+        console.print(
+            message,
+            style="bold #d68300",
+            soft_wrap=True,
+        )
+    except Exception:
+        print(message)
 
 
 def print_debug(message):
-    console.print(
-        message,
-        style="white on red",
-        soft_wrap=True,
-    )
+    try:
+        console.print(
+            message,
+            style="white on red",
+            soft_wrap=True,
+        )
+    except Exception:
+        print(message)
