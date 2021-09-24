@@ -21,7 +21,7 @@ def load_json(file_path):
 def create_base():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
     return check_base
@@ -30,7 +30,7 @@ def create_base():
 def create_test_base_for_line_test():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base.interactive = True
     check_base.log_data["excluded_lines"] = {
@@ -72,14 +72,14 @@ def test_file_excluded():
 def test_file_changed():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base.log_data = load_json("tests/assets/log_file_changed.json")
     check_base.current_file = "tests/assets/test.txt"
 
     check_base_1 = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base_1.log_data = load_json("tests/assets/log_file_unchanged.json")
     check_base_1.current_file = "tests/assets/test.txt"
@@ -97,7 +97,7 @@ def test_file_changed():
 def test_file_changed_file_added():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base.log_data = load_json("tests/assets/log_file_changed.json")
     check_base.current_file = "tests/assets/test-1.txt"
@@ -111,7 +111,7 @@ def test_file_changed_file_added():
 def test_line_has_changed():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=None,
+        excluded_file_list=[],
     )
     check_base.current_file = "tests/assets/test.txt"
     check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
@@ -144,7 +144,7 @@ def test_process_file_content_input_y(mock_input):
     mock = MagicMock()
     mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
 
-    check_base._process_file_content(mock)
+    check_base._issue_found_in_file_content(mock)
 
     assert check_base.log_data["excluded_lines"]["foo/bar/test.py"]["line"] == 1
     assert check_base.log_data["excluded_lines"]["foo/bar/test.py"]["hash"] == "16596042a0a654eab33e1a02e2aae731e9b8a4c4"
@@ -157,5 +157,21 @@ def test_process_file_content_input_not_y(mock_input):
     mock = MagicMock()
     mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
 
-    found_issue = check_base._process_file_content(mock)
+    found_issue = check_base._issue_found_in_file_content(mock)
     assert found_issue
+
+
+def test_issue_found_in_file_creates_log_for_no_issue_files():
+    test_file_name = "tests/assets/test-1.txt"
+    check_base = create_base()
+    check_base.current_file = test_file_name
+    check_base._file_changed = MagicMock(return_value=True)
+    check_base._issue_found_in_file_content = MagicMock(
+        return_value=False,
+    )
+    check_base._create_file_hash = MagicMock(
+        return_value="fake_hash",
+    )
+    check_base._issue_found_in_file(test_file_name)
+
+    assert check_base.log_data["files"][test_file_name]["hash"] == "fake_hash"

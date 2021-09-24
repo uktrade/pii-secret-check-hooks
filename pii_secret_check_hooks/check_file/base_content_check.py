@@ -10,6 +10,7 @@ from pii_secret_check_hooks.config import (
 )
 
 from pii_secret_check_hooks.util import (
+    print_debug,
     print_error,
     print_info,
     print_warning,
@@ -42,6 +43,7 @@ class CheckFileBase(ABC):
         self.exclude_output_file = exclude_output_file
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
+        self.debug = True
 
         if self.log_path:
             Path(f".pii-secret-hook/{check_name}").mkdir(parents=True, exist_ok=True)
@@ -123,18 +125,25 @@ class CheckFileBase(ABC):
             self.log_data["excluded_lines"][self.current_file]["line"] = line_num
             self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
 
-    def _process_file(self, filename) -> bool:
+    def _issue_found_in_file(self, filename) -> bool:
         found_issue = False
+
         if filename not in self.excluded_file_list:
             self.current_file = filename
             with open(filename, "r+") as f:
                 if self._file_changed(f):
+                    if self.debug:
+                        print_debug(
+                            "File changed"
+                        )
                     print_info(
-                        f"{filename} checking for sensitive data",
+                        f"{filename}",
                     )
-                    found_issue = self._process_file_content(f)
-
-                    if not found_issue:
+                    if not self._issue_found_in_file_content(f):
+                        if self.debug:
+                            print_debug(
+                                "No issue found in file"
+                            )
                         # If no issue was found, create and save file hash
                         file_hash = self._create_file_hash(f)
 
@@ -153,7 +162,7 @@ class CheckFileBase(ABC):
         for filename in filenames:
             if not self._file_extension_excluded(filename):
                 if not self._file_excluded(filename):
-                    if self._process_file(filename):
+                    if self._issue_found_in_file(filename):
                         found_issues = True
 
         log_file = open(self.log_path, "w")
@@ -162,7 +171,7 @@ class CheckFileBase(ABC):
 
         return found_issues
 
-    def _process_file_content(self, file_object) -> bool:
+    def _issue_found_in_file_content(self, file_object) -> bool:
         found_issue = False
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1

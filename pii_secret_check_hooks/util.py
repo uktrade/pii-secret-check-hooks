@@ -62,3 +62,11 @@ def print_warning(message):
         style="white on green",
         soft_wrap=True,
     )
+
+
+def print_debug(message):
+    console.print(
+        message,
+        style="white on red",
+        soft_wrap=True,
+    )
