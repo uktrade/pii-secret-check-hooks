@@ -51,7 +51,7 @@ def print_error(message):
 def print_info(message):
     console.print(
         message,
-        style="bold #5ab501",
+        style="bold #427b0b",
         soft_wrap=True,
     )
 
