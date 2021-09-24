@@ -131,14 +131,14 @@ class CheckFileBase(ABC):
         if filename not in self.excluded_file_list:
             self.current_file = filename
             with open(filename, "r+") as f:
+                print_info(
+                    f"{filename}",
+                )
                 if self._file_changed(f):
                     if self.debug:
                         print_debug(
                             "File changed"
                         )
-                    print_info(
-                        f"{filename}",
-                    )
                     if not self._issue_found_in_file_content(f):
                         if self.debug:
                             print_debug(
@@ -165,6 +165,12 @@ class CheckFileBase(ABC):
                     if self._issue_found_in_file(filename):
                         found_issues = True
 
+        print_debug(
+            self.log_data,
+        )
+        print_debug(
+            json.dumps(self.log_data),
+        )
         log_file = open(self.log_path, "w")
         log_file.write(json.dumps(self.log_data))
         log_file.close()
