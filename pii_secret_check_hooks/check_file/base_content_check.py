@@ -35,11 +35,11 @@ class CheckFileBase(ABC):
     def __init__(
         self,
         check_name,
-        excluded_file_list,
-        exclude_output_file=None,
+        interactive=False,
+        excluded_file_list=[],
     ):
+        self.interactive = interactive
         self.excluded_file_list = excluded_file_list
-        self.exclude_output_file = exclude_output_file
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
         self.debug = True
@@ -200,16 +200,16 @@ class CheckFileBase(ABC):
                     )
                     found_issue = True
             else:
-                if self.process_line(line):
+                if self.line_has_issue(line):
                     found_issue = True
 
         return found_issue
 
     @abstractmethod
-    def process_line(self, line):
+    def line_has_issue(self, line):
         raise NotImplementedError()
 
     """Optional post process logic"""
     @abstractmethod
-    def after_run(self, line):
-        pass
+    def after_run(self):
+        raise NotImplementedError()

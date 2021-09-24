@@ -37,23 +37,22 @@ class CheckForNER(CheckFileBase):
 
     def __init__(
         self,
-        excluded_file_list,
-        excluded_ner_entity_list,
+        interactive=False,
+        excluded_file_list=[],
+        excluded_ner_entity_list=[],
         exclude_output_file=None,
-        interactive=True,
     ):
         self.excluded_ner_entity_list = excluded_ner_entity_list
         self.exclude_output_file = exclude_output_file
-        self.interactive = interactive
         self.entity_list = []
 
         super(CheckForNER, self).__init__(
             "ner",
+            interactive,
             excluded_file_list,
-            exclude_output_file,
         )
 
-    def process_line(self, line):
+    def line_has_issue(self, line) -> bool:
         doc = nlp(line)
         found_issue = False
         if doc.ents:
@@ -71,16 +70,14 @@ class CheckForNER(CheckFileBase):
 
         return found_issue
 
-    def after_run(self):
+    def after_run(self) -> None:
         if self.exclude_output_file:
             self._generate_exclude_file()
 
-    def _generate_exclude_file(self):
+    def _generate_exclude_file(self) -> None:
         if not self.exclude_output_file:
             raise NoExcludeFilePassedException()
 
-        exclude_file = open(self.exclude_output_file, "w")
-        for entity in self.entity_list:
-            exclude_file.write(f"{entity}\n")
-
-        exclude_file.close()
+        with open(self.exclude_output_file, "w") as exclude_file:
+            for entity in self.entity_list:
+                exclude_file.write(f"{entity}\n")

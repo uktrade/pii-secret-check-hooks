@@ -9,7 +9,10 @@ from pii_secret_check_hooks.config import IGNORE_EXTENSIONS
 
 
 class CheckFileBaseTest(CheckFileBase):
-    def process_line(self, line):
+    def line_has_issue(self, line):
+        pass
+
+    def after_run(self):
         pass
 
 

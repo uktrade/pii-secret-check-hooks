@@ -41,18 +41,16 @@ class CheckFileContent(CheckFileBase):
 
     def __init__(
         self,
-        excluded_file_list,
-        custom_regex_list,
-        exclude_output_file=None,
-        interactive=True,
+        interactive=False,
+        excluded_file_list=[],
+        custom_regex_list=[],
     ):
         self.custom_regex_list = custom_regex_list
-        self.interactive = interactive
 
         super(CheckFileContent, self).__init__(
             "file_content",
+            interactive,
             excluded_file_list,
-            exclude_output_file,
         )
 
     def _entropy_check(self, line):
@@ -105,7 +103,7 @@ class CheckFileContent(CheckFileBase):
                 )
                 return None
 
-    def process_line(self, line):
+    def line_has_issue(self, line) -> bool:
         trufflehog_check = self._trufflehog_check(line)
         if trufflehog_check:
             print_warning(
@@ -133,4 +131,7 @@ class CheckFileContent(CheckFileBase):
             )
             return True
 
-        return None
+        return False
+
+    def after_run(self):
+        pass
