@@ -156,6 +156,10 @@ class CheckFileBase(ABC):
 
     def process_files(self, filenames) -> bool:
         found_issues = False
+        print_debug(
+            "Processing files..."
+        )
+
         for filename in filenames:
             if not self._file_extension_excluded(filename):
                 if not self._file_excluded(filename):
