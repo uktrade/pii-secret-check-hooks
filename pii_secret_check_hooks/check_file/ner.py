@@ -7,6 +7,7 @@ from pii_secret_check_hooks.config import (
 )
 
 from pii_secret_check_hooks.util import (
+    print_info,
     print_warning,
 )
 
@@ -78,6 +79,9 @@ class CheckForNER(CheckFileBase):
         if not self.exclude_output_file:
             raise NoExcludeFilePassedException()
 
+        print_info(
+            f"Outputting NER results to exclude file {self.exclude_output_file}",
+        )
         with open(self.exclude_output_file, "w") as exclude_file:
             for entity in self.entity_list:
                 exclude_file.write(f"{entity}\n")
