@@ -21,7 +21,7 @@ def main(argv=None):
     if check_file_names(args.filenames, excluded_filenames):
         return 1
 
-    return 0
+    return 1
 
 
 if __name__ == "__main__":
