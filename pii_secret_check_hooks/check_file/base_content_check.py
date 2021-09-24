@@ -12,6 +12,7 @@ from pii_secret_check_hooks.config import (
 from pii_secret_check_hooks.util import (
     print_error,
     print_info,
+    print_debug,
     print_warning,
 )
 
@@ -161,11 +162,23 @@ class CheckFileBase(ABC):
                     if self._issue_found_in_file(filename):
                         found_issues = True
 
+        print_debug(
+            f"Processed files, found issues: {found_issues}"
+        )
+
         log_file = open(self.log_path, "w")
         log_file.write(json.dumps(self.log_data))
         log_file.close()
 
+        print_debug(
+            f"Processed files, found issues: {found_issues}"
+        )
+
         self.after_run()
+
+        print_debug(
+            f"Processed files, found issues: {found_issues}"
+        )
 
         return found_issues
 

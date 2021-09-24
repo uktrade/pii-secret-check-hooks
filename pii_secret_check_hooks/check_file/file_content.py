@@ -133,5 +133,5 @@ class CheckFileContent(CheckFileBase):
 
         return False
 
-    def after_run(self):
+    def after_run(self) -> None:
         pass
