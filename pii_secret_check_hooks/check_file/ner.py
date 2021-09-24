@@ -72,7 +72,7 @@ class CheckForNER(CheckFileBase):
         return found_issue
 
     def after_run(self):
-        if not self.exclude_output_file:
+        if self.exclude_output_file:
             self._generate_exclude_file()
 
     def _generate_exclude_file(self):
