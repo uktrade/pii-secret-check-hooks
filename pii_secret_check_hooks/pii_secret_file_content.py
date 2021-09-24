@@ -43,7 +43,7 @@ def main(argv=None):
     if process_file_content.process_files(args.filenames):
         return 1
 
-    return 1
+    return 0
 
 
 if __name__ == "__main__":

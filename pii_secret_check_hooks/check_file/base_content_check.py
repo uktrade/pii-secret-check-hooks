@@ -135,7 +135,9 @@ class CheckFileBase(ABC):
                         f"{filename}",
                     )
                     if self._file_changed(f):
-                        if not self._issue_found_in_file_content(f):
+                        if self._issue_found_in_file_content(f):
+                            return True
+                        else:
                             # If no issue was found, create and save file hash
                             file_hash = self._create_file_hash(f)
 
@@ -156,9 +158,6 @@ class CheckFileBase(ABC):
 
     def process_files(self, filenames) -> bool:
         found_issues = False
-        print_debug(
-            "Processing files..."
-        )
 
         for filename in filenames:
             if not self._file_extension_excluded(filename):
@@ -166,23 +165,11 @@ class CheckFileBase(ABC):
                     if self._issue_found_in_file(filename):
                         found_issues = True
 
-        print_debug(
-            f"Processed files, found issues: {found_issues}"
-        )
-
         log_file = open(self.log_path, "w")
         log_file.write(json.dumps(self.log_data))
         log_file.close()
 
-        print_debug(
-            f"Processed files, found issues: {found_issues}"
-        )
-
         self.after_run()
-
-        print_debug(
-            f"Processed files, found issues: {found_issues}"
-        )
 
         return found_issues
 
