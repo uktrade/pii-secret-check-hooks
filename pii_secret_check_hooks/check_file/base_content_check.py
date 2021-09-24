@@ -126,36 +126,40 @@ class CheckFileBase(ABC):
             self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
 
     def _issue_found_in_file(self, filename) -> bool:
-        found_issue = False
-
-        if filename not in self.excluded_file_list:
-            self.current_file = filename
-            with open(filename, "r+") as f:
-                print_info(
-                    f"{filename}",
-                )
-                if self._file_changed(f):
-                    if self.debug:
-                        print_debug(
-                            "File changed"
-                        )
-                    if not self._issue_found_in_file_content(f):
+        try:
+            found_issue = False
+            if filename not in self.excluded_file_list:
+                self.current_file = filename
+                with open(filename, "r+") as f:
+                    print_info(
+                        f"{filename}",
+                    )
+                    if self._file_changed(f):
                         if self.debug:
                             print_debug(
-                                "No issue found in file"
+                                "File changed"
                             )
-                        # If no issue was found, create and save file hash
-                        file_hash = self._create_file_hash(f)
+                        if not self._issue_found_in_file_content(f):
+                            if self.debug:
+                                print_debug(
+                                    "No issue found in file"
+                                )
+                            # If no issue was found, create and save file hash
+                            file_hash = self._create_file_hash(f)
 
-                        # Set file entry in file log
-                        if self.current_file not in self.log_data["files"]:
-                            self.log_data["files"][self.current_file] = {
-                                "hash": ""
-                            }
+                            # Set file entry in file log
+                            if self.current_file not in self.log_data["files"]:
+                                self.log_data["files"][self.current_file] = {
+                                    "hash": ""
+                                }
 
-                        self.log_data["files"][self.current_file]["hash"] = file_hash
+                            self.log_data["files"][self.current_file]["hash"] = file_hash
 
-        return found_issue
+            return found_issue
+        except Exception as ex:
+            print_error(
+                f"An exception occurred processing this file, ex: {ex}"
+            )
 
     def process_files(self, filenames) -> bool:
         found_issues = False
