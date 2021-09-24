@@ -101,7 +101,7 @@ class CheckFileContent(CheckFileBase):
                     return f"'{regex_name}'"
             except re.error as ex:
                 print_error(
-                    f"Custom regex error for '{custom_regex}' regex: '{ex}'",
+                    f"Custom regex error for {custom_regex} regex: '{ex}'",
                 )
                 return None
 
@@ -109,7 +109,7 @@ class CheckFileContent(CheckFileBase):
         trufflehog_check = self._trufflehog_check(line)
         if trufflehog_check:
             print_warning(
-                f"Line {self.current_line_num}, '{trufflehog_check}' check failed",
+                f"Line {self.current_line_num}, {trufflehog_check} check failed",
             )
             return True
 
@@ -122,14 +122,14 @@ class CheckFileContent(CheckFileBase):
         pii_check_result = self._pii_regex(line)
         if pii_check_result:
             print_warning(
-                f"Line {self.current_line_num}, '{pii_check_result}' check failed",
+                f"Line {self.current_line_num}, {pii_check_result} check failed",
             )
             return True
 
         custom_regex_check = self._custom_regex_checks(line)
         if custom_regex_check:
             print_warning(
-                f"Line {self.current_line_num}, '{custom_regex_check}' check failed",
+                f"Line {self.current_line_num}, {custom_regex_check} check failed",
             )
             return True
 

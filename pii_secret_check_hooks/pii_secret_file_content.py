@@ -17,15 +17,15 @@ def main(argv=None):
         help="Files to check",
     )
     parser.add_argument(
-        "exclude",
+        "--exclude",
         nargs="?",
-        default=".pii-secret-exclude",
+        default="pii-secret-exclude.txt",
         help="Exclude file path",
     )
     parser.add_argument(
-        "regex_file",
+        "--regex_file",
         nargs="?",
-        default=".pii-custom-regex",
+        default="pii-custom-regex.txt",
         help="File with custom regex (one per line)",
     )
     args = parser.parse_args(argv)

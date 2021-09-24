@@ -165,6 +165,8 @@ class CheckFileBase(ABC):
         log_file.write(json.dumps(self.log_data))
         log_file.close()
 
+        self.after_run()
+
         return found_issues
 
     def _issue_found_in_file_content(self, file_object) -> bool:
@@ -206,3 +208,8 @@ class CheckFileBase(ABC):
     @abstractmethod
     def process_line(self, line):
         raise NotImplementedError()
+
+    """Optional post process logic"""
+    @abstractmethod
+    def after_run(self, line):
+        pass

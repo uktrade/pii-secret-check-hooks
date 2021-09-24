@@ -2,6 +2,8 @@ import re
 from rich.console import Console
 
 from pii_secret_check_hooks.config import FILENAME_REGEX
+from pii_secret_check_hooks.util import print_warning
+
 
 console = Console()
 
@@ -19,10 +21,8 @@ def check_file_names(filenames, excluded_filenames=[]):
             match = _detect_match_against_filename(filename, FILENAME_REGEX)
             if match:
                 found_issue = True
-                console.print(
+                print_warning(
                     f"{filename} may contain sensitive information due to the file type",
-                    style="bold red",
-                    soft_wrap=True,
                 )
 
     return found_issue
