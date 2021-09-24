@@ -43,7 +43,7 @@ def get_excluded_ner(file_path):
 def print_error(message):
     console.print(
         message,
-        style="bold red",
+        style="bold #d3391f",
         soft_wrap=True,
     )
 
@@ -51,7 +51,7 @@ def print_error(message):
 def print_info(message):
     console.print(
         message,
-        style="white on blue",
+        style="bold #5ab501",
         soft_wrap=True,
     )
 
@@ -59,7 +59,7 @@ def print_info(message):
 def print_warning(message):
     console.print(
         message,
-        style="white on green",
+        style="bold #d68300",
         soft_wrap=True,
     )
 
