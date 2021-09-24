@@ -160,6 +160,7 @@ class CheckFileBase(ABC):
             print_error(
                 f"An exception occurred processing this file, ex: {ex}"
             )
+            return True
 
     def process_files(self, filenames) -> bool:
         found_issues = False
