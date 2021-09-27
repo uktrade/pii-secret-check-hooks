@@ -1,5 +1,4 @@
 import os
-import sys
 import hashlib
 import json
 from json import load as load_json
@@ -41,17 +40,6 @@ class CheckFileBase(ABC):
         interactive=False,
         excluded_file_list=[],
     ):
-        if interactive:
-            try:
-                sys.stdin = open('/dev/tty')
-                print_info("Using interactive mode")
-            except Exception as ex:
-                print_error(
-                    f"Exception {ex}, cannot accept input, "
-                    f"using non-interactive mode"
-                )
-                interactive = False
-
         self.interactive = interactive
         self.excluded_file_list = excluded_file_list
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
