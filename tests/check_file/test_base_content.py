@@ -194,6 +194,17 @@ def test_process_file_content_input_not_y(mock_input):
     assert found_issue
 
 
+def test_process_file_content_non_interactive():
+    check_base = create_test_base_for_line_test()
+    check_base.interactive = False
+
+    mock = MagicMock()
+    mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
+
+    found_issue = check_base._issue_found_in_file_content(mock)
+    assert not found_issue
+
+
 def test_issue_found_in_file_creates_log_for_no_issue_files():
     test_file_name = "tests/assets/test-1.txt"
     check_base = create_base()

@@ -1,4 +1,5 @@
 import os
+import sys
 import hashlib
 import json
 from json import load as load_json
@@ -40,6 +41,16 @@ class CheckFileBase(ABC):
         interactive=False,
         excluded_file_list=[],
     ):
+        if interactive:
+            try:
+                sys.stdin = open('/dev/tty')
+            except Exception as ex:
+                print(
+                    f"Exception {ex}, cannot accept input, "
+                    f"using non interactive mode"
+                )
+                interactive = False
+
         self.interactive = interactive
         self.excluded_file_list = excluded_file_list
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
@@ -185,7 +196,7 @@ class CheckFileBase(ABC):
                     continue
                 elif self.interactive:
                     print_warning(
-                        line.strip()
+                        f"{self.current_line_num}. {line.strip()}"
                     )
                     print_info(
                         "Line marked for exclusion. Please type 'y' to confirm "
@@ -201,11 +212,17 @@ class CheckFileBase(ABC):
                         )
                         found_issue = True
                 else:
-                    print_info(line.strip())
-                    print_error(
-                        f"Line has been updated since last check",
+                    # If we're not in interactive mode,
+                    # we can't get a confirmation on the
+                    # status of sensitive info
+                    print_warning(
+                        f"{self.current_line_num}. {line.strip()}"
                     )
-                    found_issue = True
+                    print_error(
+                        "Line marked for exclusion but it has changed since it "
+                        "was last checked. Please manually check it does not "
+                        "contain sensitive information",
+                    )
             else:
                 if self.line_has_issue(line):
                     found_issue = True
