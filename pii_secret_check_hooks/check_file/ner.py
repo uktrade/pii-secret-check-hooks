@@ -66,7 +66,8 @@ class CheckForNER(CheckFileBase):
                     print_warning(
                         f"Line {self.current_line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
                     )
-                    self.entity_list.append(ent.text)
+                    if ent.text not in self.entity_list:
+                        self.entity_list.append(ent.text)
                     found_issue = True
 
         return found_issue
