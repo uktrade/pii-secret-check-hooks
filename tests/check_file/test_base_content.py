@@ -1,5 +1,7 @@
 import hashlib
 import json
+import os
+import time
 from unittest.mock import MagicMock, patch
 
 from pii_secret_check_hooks.check_file.base_content_check import (
@@ -24,7 +26,6 @@ def load_json(file_path):
 def create_base():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=[],
     )
     check_base.log_data = load_json("tests/assets/log_file_unchanged.json")
     return check_base
@@ -33,7 +34,6 @@ def create_base():
 def create_test_base_for_line_test():
     check_base = CheckFileBaseTest(
         check_name="test_base",
-        excluded_file_list=[],
     )
     check_base.interactive = True
     check_base.log_data["excluded_lines"] = {
@@ -44,6 +44,36 @@ def create_test_base_for_line_test():
     check_base.current_file = "foo/bar/test.py"
 
     return check_base
+
+
+@patch('pii_secret_check_hooks.check_file.base_content_check.load_json')
+def test_log_updated(load_json):
+    load_json.return_value = {
+        "files": {
+            "tests/assets/test.txt": {
+                "hash": "291f89e4b12779a5cbef6f508f5e593dea9dd9b4"
+            }
+        },
+        "excluded_lines": {
+            "tests/assets/test.txt": {
+                "line": 11,
+                "hash": "c5d191810c3a09a99f73ca145a4ce34e09a94790"
+            }
+        }
+    }
+    check_base = CheckFileBaseTest(
+        check_name="test_base",
+    )
+    assert "tests/assets/test.txt" in check_base.log_data["files"]
+
+    output_file_path = f"tests/check_output_{str(time.time())}.txt"
+    check_base.log_path = output_file_path
+    check_base._write_log()
+
+    with open(output_file_path, 'r') as json_file:
+        assert "tests/assets/test.txt" in load_json(json_file)["files"]
+
+    os.remove(output_file_path)
 
 
 def test_create_file_hash():

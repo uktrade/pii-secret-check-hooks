@@ -53,6 +53,7 @@ In order to run the latest version of these hooks run:
     pre-commit autoupdate
 
 ## TODO
- * Group issues at end of output rather than displaying amongst ignore messages
+ * Check for duplication before adding to NER exclude file
+ * Log file is overwritten and loses content when application is executed
  * Add office (and any other relevant) extensions
  * Add help command

@@ -1,6 +1,7 @@
 import os
 import hashlib
 import json
+from json import load as load_json
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -48,9 +49,9 @@ class CheckFileBase(ABC):
         if self.log_path:
             Path(f".pii-secret-hook/{check_name}").mkdir(parents=True, exist_ok=True)
 
-            with open(self.log_path, 'a+') as json_file:
+            with open(self.log_path, 'r') as json_file:
                 try:
-                    self.log_data = json.load(json_file)
+                    self.log_data = load_json(json_file)
                 except json.decoder.JSONDecodeError:
                     self.log_data = self._get_empty_log()
 
@@ -156,6 +157,11 @@ class CheckFileBase(ABC):
             )
             return True
 
+    def _write_log(self):
+        log_file = open(self.log_path, "w")
+        log_file.write(json.dumps(self.log_data))
+        log_file.close()
+
     def process_files(self, filenames) -> bool:
         found_issues = False
 
@@ -165,10 +171,7 @@ class CheckFileBase(ABC):
                     if self._issue_found_in_file(filename):
                         found_issues = True
 
-        log_file = open(self.log_path, "w")
-        log_file.write(json.dumps(self.log_data))
-        log_file.close()
-
+        self._write_log()
         self.after_run()
 
         return found_issues
