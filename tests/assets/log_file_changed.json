@@ -3,11 +3,5 @@
         "tests/assets/test.txt": {
             "hash": "f4eba6fd2173efe51cg711a9f5acefe51cg711a9"
         }
-    },
-    "excluded_lines": {
-        "tests/assets/test.txt": {
-            "line": 11,
-            "hash": "f5d19110c3a09a99fv3ca145a4ce34e09a94790"
-        }
     }
 }

@@ -37,10 +37,10 @@ class CheckFileBase(ABC):
     def __init__(
         self,
         check_name,
-        interactive=False,
+        allow_changed_lines=False,
         excluded_file_list=[],
     ):
-        self.interactive = interactive
+        self.allow_changed_lines = allow_changed_lines
         self.excluded_file_list = excluded_file_list
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
@@ -97,35 +97,6 @@ class CheckFileBase(ABC):
 
         return True
 
-    # Check to see if line (without hash) matches hash
-    def _line_has_changed(self, line_num, line) -> bool:
-        if self.current_file in self.log_data["excluded_lines"]:
-            file_info = self.log_data["excluded_lines"][self.current_file]
-            if file_info["line"] == line_num:
-                line_sha1 = hashlib.sha1()
-                line_sha1.update(
-                    line.encode("utf-8"),
-                )
-                if file_info["hash"] == line_sha1.hexdigest():
-                    return False
-
-        return True
-
-    def _update_line_hash(self, line_num, line) -> None:
-        line_sha1 = hashlib.sha1()
-        line_sha1.update(
-            line.encode('utf-8'),
-        )
-
-        if self.current_file in self.log_data["excluded_lines"]:
-            self.log_data["excluded_lines"][self.current_file] = {
-                "hash": line_sha1.hexdigest(),
-                "line": line_num,
-            }
-        else:
-            self.log_data["excluded_lines"][self.current_file]["line"] = line_num
-            self.log_data["excluded_lines"][self.current_file]["hash"] = line_sha1.hexdigest()
-
     def _issue_found_in_file(self, filename) -> bool:
         try:
             found_issue = False
@@ -176,44 +147,22 @@ class CheckFileBase(ABC):
 
         return found_issues
 
+    # Should only be run if file content has changed
     def _issue_found_in_file_content(self, file_object) -> bool:
         found_issue = False
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1
-            if LINE_MARKER in line:
-                if not self._line_has_changed(i, line):
-                    continue
-                elif self.interactive:
-                    print_warning(
-                        f"Line {self.current_line_num}. {line.strip()}"
-                    )
-                    print_info(
-                        "Line marked for exclusion. Please type 'y' to confirm "
-                        "that there is no sensitive information present",
-                    )
-                    confirmation = input()
-                    if confirmation == "y":
-                        self._update_line_hash(i + 1, line)
-                    else:
-                        print_error(
-                            f"Line has been updated since last check",
-                        )
-                        found_issue = True
-                else:
-                    # If we're not in interactive mode,
-                    # we can't get a confirmation on the
-                    # status of sensitive info
-                    print_warning(
-                        f"Line {self.current_line_num}. {line.strip()}"
-                    )
-                    print_error(
-                        "Line marked for exclusion but it has changed since it "
-                        "was last checked. Please manually check it does not "
-                        "contain sensitive information",
-                    )
-            else:
-                if self.line_has_issue(line):
-                    found_issue = True
+            if LINE_MARKER in line and self.allow_changed_lines:
+                print_warning(
+                    f"Line {self.current_line_num}. {line.strip()}"
+                )
+                print_error(
+                    "Line marked for exclusion, the line has changed since it "
+                    "was last checked.\nPlease manually check it does not "
+                    "contain sensitive information",
+                )
+            elif self.line_has_issue(line):
+                found_issue = True
 
         return found_issue
 

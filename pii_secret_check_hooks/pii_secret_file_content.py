@@ -36,7 +36,7 @@ def main(argv=None):
     excluded_filenames.append(args.regex_file)
 
     process_file_content = CheckFileContent(
-        interactive=False,
+        allow_changed_lines=True,
         excluded_file_list=excluded_filenames,
         custom_regex_list=custom_regex_list,
     )

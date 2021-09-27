@@ -38,7 +38,7 @@ class CheckForNER(CheckFileBase):
 
     def __init__(
         self,
-        interactive=False,
+        allow_changed_lines=False,
         excluded_file_list=[],
         excluded_ner_entity_list=[],
         exclude_output_file=None,
@@ -48,9 +48,9 @@ class CheckForNER(CheckFileBase):
         self.entity_list = []
 
         super(CheckForNER, self).__init__(
-            "ner",
-            interactive,
-            excluded_file_list,
+            check_name="ner",
+            allow_changed_lines=allow_changed_lines,
+            excluded_file_list=excluded_file_list,
         )
 
     def line_has_issue(self, line) -> bool:

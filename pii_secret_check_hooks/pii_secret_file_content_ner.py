@@ -50,7 +50,7 @@ def main(argv=None):
         print_info(f"Exclude file {exclude_output_file} provided")
 
     process_ner_file = CheckForNER(
-        interactive=True,
+        allow_changed_lines=True,
         excluded_file_list=excluded_filenames,
         excluded_ner_entity_list=excluded_entities,
         exclude_output_file=exclude_output_file,

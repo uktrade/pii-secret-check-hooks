@@ -44,7 +44,7 @@ def main():
             return 0
         else:
             print_warning(
-                "Your pii-secret-check-hooks version is {yours} and latest is {latest}."
+                "Your pii-secret-check-hooks version is {yours} and latest is {latest}.\n"
                 ' Please run the following command in this directory: "pre-commit autoupdate"'.format(
                     yours=config_version, latest=latest_release
                 ),
