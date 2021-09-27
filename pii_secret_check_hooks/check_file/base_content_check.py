@@ -44,10 +44,11 @@ class CheckFileBase(ABC):
         if interactive:
             try:
                 sys.stdin = open('/dev/tty')
+                print_info("Using interactive mode")
             except Exception as ex:
-                print(
+                print_error(
                     f"Exception {ex}, cannot accept input, "
-                    f"using non interactive mode"
+                    f"using non-interactive mode"
                 )
                 interactive = False
 
@@ -196,7 +197,7 @@ class CheckFileBase(ABC):
                     continue
                 elif self.interactive:
                     print_warning(
-                        f"{self.current_line_num}. {line.strip()}"
+                        f"Line {self.current_line_num}. {line.strip()}"
                     )
                     print_info(
                         "Line marked for exclusion. Please type 'y' to confirm "
@@ -206,7 +207,6 @@ class CheckFileBase(ABC):
                     if confirmation == "y":
                         self._update_line_hash(i + 1, line)
                     else:
-                        print_info(line)
                         print_error(
                             f"Line has been updated since last check",
                         )
@@ -216,7 +216,7 @@ class CheckFileBase(ABC):
                     # we can't get a confirmation on the
                     # status of sensitive info
                     print_warning(
-                        f"{self.current_line_num}. {line.strip()}"
+                        f"Line {self.current_line_num}. {line.strip()}"
                     )
                     print_error(
                         "Line marked for exclusion but it has changed since it "

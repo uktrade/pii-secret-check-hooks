@@ -107,27 +107,27 @@ class CheckFileContent(CheckFileBase):
         trufflehog_check = self._trufflehog_check(line)
         if trufflehog_check:
             print_warning(
-                f"Line {self.current_line_num}, {trufflehog_check} check failed",
+                f"Line {self.current_line_num}. {trufflehog_check} check failed",
             )
             return True
 
         if self._entropy_check(line):
             print_warning(
-                f"Line {self.current_line_num}, entropy check failed",
+                f"Line {self.current_line_num}. entropy check failed",
             )
             return True
 
         pii_check_result = self._pii_regex(line)
         if pii_check_result:
             print_warning(
-                f"Line {self.current_line_num}, {pii_check_result} check failed",
+                f"Line {self.current_line_num}. {pii_check_result} check failed",
             )
             return True
 
         custom_regex_check = self._custom_regex_checks(line)
         if custom_regex_check:
             print_warning(
-                f"Line {self.current_line_num}, {custom_regex_check} check failed",
+                f"Line {self.current_line_num}. {custom_regex_check} check failed",
             )
             return True
 
