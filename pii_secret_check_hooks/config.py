@@ -8,6 +8,7 @@ IGNORE_EXTENSIONS = [
    ".png",
    ".jpg",
    ".jpeg",
+   ".gif",
    ".svg",
    ".ico",
    ".eot",
@@ -26,18 +27,61 @@ FILENAME_REGEX = [
    r"\.csv$",
    r"\.xlsx$",
    r"\.xls$",
-   # Word extensions (legacy)
-   r"\.doc&",
-   r"\.dot&",
-   r"\.wbk&",
-   # Word extensions
-   r"\.docx&",
-   r"\.docm&",
-   r"\.docx&",
-   r"\.docm&",
-   r"\.docb&",
+   # Word Legacy
+   r"\.doc$",
+   r"\.dot$",
+   r"\.wbk$",
+   #  Word Office Open XML (OOXML) format
+   r"\.docx$",
+   r"\.docm$",
+   r"\.dotx$",
+   r"\.dotm$",
+   r"\.docb$",
+   # Excel
+   r"\.xls$",
+   r"\.xlt$",
+   r"\.xlm$",
+   #  Excel OOXML
+   r"\.xlsx$",
+   r"\.xlsm$",
+   r"\.xltx$",
+   r"\.xltm$",
+   # Other formats
+   r"\.xlsb$",
+   r"\.xla$",
+   r"\.xlam$",
+   r"\.xll$",
+   r"\.xlw$",
+   # PowerPoint legacy
+   r"\.ppt$",
+   r"\.pot$",
+   r"\.pps$",
+   # OOXML
+   r"\.pptx$",
+   r"\.pptm$",
+   r"\.potx$",
+   r"\.potm$",
+   r"\.ppam$",
+   r"\.ppsx$",
+   r"\.ppsm$",
+   r"\.sldx$",
+   r"\.sldm$",
+   # Access
+   r"\.accdb$",
+   r"\.accde$",
+   r"\.accdt$",
+   r"\.accdr$",
+   # OneNote
+   r"\.one$",
+   # Publisher
+   r"\.pub$",
+   # XPS Document
+   r"\.xps$",
    # Adobe
-   "\.pdf$",
+   r"\.pdf$",
+   r"\.ps$",
+   r"\.eps$"
+   r"\.prn$",
    # conf
    r"\.conf$",
    r"\.env$",
