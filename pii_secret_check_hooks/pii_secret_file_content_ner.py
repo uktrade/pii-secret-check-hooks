@@ -62,6 +62,7 @@ def main(argv=None):
         )
         return 1
 
+    print_info("NER checks passed")
     return 0
 
 
