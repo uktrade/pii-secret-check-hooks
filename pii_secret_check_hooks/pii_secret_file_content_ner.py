@@ -32,7 +32,7 @@ def main(argv=None):
         help="Named Entity Recognition exclude file path. One per line.",
     )
     parser.add_argument(
-        "--exclude_output_file",
+        "--ner_output_file",
         nargs="?",
         default=None,
         help="File for outputting exclude data to",
