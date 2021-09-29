@@ -7,6 +7,7 @@ from pii_secret_check_hooks.util import (
 from pii_secret_check_hooks.check_file.file_content import (
     CheckFileContent,
 )
+from pii_secret_check_hooks.util import print_error
 
 
 def main(argv=None):
@@ -42,6 +43,9 @@ def main(argv=None):
     )
 
     if process_file_content.process_files(args.filenames):
+        print_error(
+            "File content check failed",
+        )
         return 1
 
     return 0

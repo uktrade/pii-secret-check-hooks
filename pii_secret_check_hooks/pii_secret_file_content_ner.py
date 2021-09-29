@@ -6,7 +6,7 @@ from pii_secret_check_hooks.util import (
     get_excluded_ner,
 )
 from pii_secret_check_hooks.check_file.ner import CheckForNER
-from pii_secret_check_hooks.util import print_info
+from pii_secret_check_hooks.util import print_error, print_info
 
 
 console = Console()
@@ -57,6 +57,9 @@ def main(argv=None):
     )
 
     if process_ner_file.process_files(args.filenames):
+        print_error(
+            "NER content check failed",
+        )
         return 1
 
     return 0
