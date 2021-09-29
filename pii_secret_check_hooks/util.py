@@ -33,7 +33,12 @@ def get_regex_from_file(file_path):
 
 
 def get_excluded_filenames(file_path):
-    excluded = ["pii-secret-exclude.txt", "pii-ner-exclude.txt", ]
+    excluded = [
+        ".pii-secret-hook/file_content/pii-secret-log",
+        ".pii-secret-hook/ner/pii-secret-log",
+        "pii-secret-exclude.txt",
+        "pii-ner-exclude.txt",
+    ]
     return excluded + _get_file_content_as_list(file_path, "exclude")
 
 
