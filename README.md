@@ -13,7 +13,7 @@ Make sure you run:
  * Add a `.pii-secret-exclude` file if needed (explanation below)
  * Add a `.pii-custom-regex` file if needed (explanation below)
  * Add a `.pii-ner-exclude` file if needed (explanation below)
- 
+
 ## Tracking exclusions
 A file is written to, which should be included in committed files, which records a hash of
 files checked by the hooks.
@@ -31,6 +31,16 @@ Regexes used should be Python compatible and should not use start and end marker
 
 ## Excluding false positives from the NER hook
 Add your own list of entities that should be excluded in the .pii-custom-ner-exclude file.
+
+## Generating an exclude file with a list of NER entities to exclude
+If you want to output NER entities into a single file (very useful when setting up a repo), you can 
+add the --exclude_output_file to your pre-commit configuration as follows:
+
+    id: pii_secret_file_content_ner
+    args: [--exclude_output_file=exclude_file_path]
+    ...
+
+where `exclude_file_path` is the path to the exclude file you want to output to.
 
 ## Initial run
 Run the following command to identify issues in your repo.

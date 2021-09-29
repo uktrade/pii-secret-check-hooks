@@ -40,20 +40,20 @@ def main(argv=None):
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
     excluded_entities = get_excluded_ner(args.ner_exclude)
-    exclude_output_file = args.exclude_output_file
+    ner_output_file = args.ner_output_file
 
     print_info(
         "Using spaCY NER (https://spacy.io/) for PII checks",
     )
 
-    if exclude_output_file:
-        print_info(f"Exclude file {exclude_output_file} provided")
+    if ner_output_file:
+        print_info(f"Exclude file '{ner_output_file}' provided")
 
     process_ner_file = CheckForNER(
         allow_changed_lines=True,
         excluded_file_list=excluded_filenames,
         excluded_ner_entity_list=excluded_entities,
-        exclude_output_file=exclude_output_file,
+        ner_output_file=ner_output_file,
     )
 
     if process_ner_file.process_files(args.filenames):

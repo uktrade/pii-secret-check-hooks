@@ -12,20 +12,20 @@ def create_check():
     return check_for_ner
 
 
-def test_generate_exclude_file():
-    test_file_path = "test_exclude_output_file.txt"
+def test_generate_ner_file():
+    test_output_file_path = "test_ner_output_file.txt"
     check_for_ner = CheckForNER(
         excluded_file_list=None,
         excluded_ner_entity_list=None,
-        exclude_output_file=test_file_path,
+        ner_output_file=test_output_file_path,
     )
     check_for_ner.entity_list = [
         "test",
     ]
 
-    check_for_ner._generate_exclude_file()
+    check_for_ner._generate_ner_file()
 
-    with open(test_file_path, 'r', encoding='utf-8') as test_file:
+    with open(test_output_file_path, 'r', encoding='utf-8') as test_file:
         assert test_file.readline() == "test\n"
 
-    os.remove(test_file_path)
+    os.remove(test_output_file_path)

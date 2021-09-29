@@ -41,10 +41,10 @@ class CheckForNER(CheckFileBase):
         allow_changed_lines=False,
         excluded_file_list=[],
         excluded_ner_entity_list=[],
-        exclude_output_file=None,
+        ner_output_file=None,
     ):
         self.excluded_ner_entity_list = excluded_ner_entity_list
-        self.exclude_output_file = exclude_output_file
+        self.ner_output_file = ner_output_file
         self.entity_list = []
 
         super(CheckForNER, self).__init__(
@@ -64,7 +64,7 @@ class CheckForNER(CheckFileBase):
                     ent.text.lower() not in self.excluded_ner_entity_list
                 ):
                     print_warning(
-                        f"Line {self.current_line_num}, please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
+                        f"Line {self.current_line_num}. please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
                     )
                     if ent.text not in self.entity_list:
                         self.entity_list.append(ent.text)
@@ -73,18 +73,18 @@ class CheckForNER(CheckFileBase):
         return found_issue
 
     def after_run(self) -> None:
-        if self.exclude_output_file:
-            self._generate_exclude_file()
+        if self.ner_output_file:
+            self._generate_ner_file()
         else:
-            print_info("No exclude file provided")
+            print_info("No NER output file provided")
 
-    def _generate_exclude_file(self) -> None:
-        if not self.exclude_output_file:
+    def _generate_ner_file(self) -> None:
+        if not self.ner_output_file:
             raise NoExcludeFilePassedException()
 
         print_info(
-            f"Outputting NER results to exclude file {self.exclude_output_file}",
+            f"Outputting NER results to NER file '{self.ner_output_file}'",
         )
-        with open(self.exclude_output_file, "w") as exclude_file:
+        with open(self.ner_output_file, "w") as exclude_file:
             for entity in self.entity_list:
                 exclude_file.write(f"{entity}\n")
