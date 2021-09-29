@@ -49,11 +49,14 @@ class CheckFileBase(ABC):
         if self.log_path:
             Path(f".pii-secret-hook/{check_name}").mkdir(parents=True, exist_ok=True)
 
-            with open(self.log_path, 'r') as json_file:
-                try:
-                    self.log_data = load_json(json_file)
-                except json.decoder.JSONDecodeError:
-                    self.log_data = self._get_empty_log()
+            try:
+                with open(self.log_path, 'r') as json_file:
+                    try:
+                        self.log_data = load_json(json_file)
+                    except json.decoder.JSONDecodeError:
+                        self.log_data = self._get_empty_log()
+            except FileNotFoundError:
+                self.log_data = self._get_empty_log()
 
         super().__init__()
 
