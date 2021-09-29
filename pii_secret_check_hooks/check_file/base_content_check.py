@@ -164,7 +164,7 @@ class CheckFileBase(ABC):
                     "was last checked.\nPlease manually check it does not "
                     "contain sensitive information",
                 )
-            elif self.line_has_issue(line):
+            elif self.line_has_issue(line.strip()):
                 found_issue = True
 
         return found_issue
