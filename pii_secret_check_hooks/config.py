@@ -2,7 +2,7 @@ REPO_URL = "https://github.com/uktrade/pii-secret-check-hooks/releases/latest"
 
 RELEASE_CHECK_URL = "https://api.github.com/repos/uktrade/pii-secret-check-hooks/releases/latest"
 
-LINE_MARKER = "#PS-IGNORE"
+LINE_MARKER = "/PS-IGNORE"
 
 IGNORE_EXTENSIONS = [
    ".png",
