@@ -1,4 +1,5 @@
 import os
+from pathlib import PurePath
 import hashlib
 import json
 from json import load as load_json
@@ -86,8 +87,10 @@ class CheckFileBase(ABC):
         return False
 
     def _file_excluded(self, filename) -> bool:
-        if filename in self.excluded_file_list:
-            return True
+        file_path = PurePath(filename)
+        for excluded_path_or_file in self.excluded_file_list:
+            if file_path.is_relative_to(excluded_path_or_file):
+                return True
 
         return False
 

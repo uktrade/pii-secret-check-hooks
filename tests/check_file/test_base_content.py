@@ -75,10 +75,16 @@ def test_file_extension_excluded():
     )
 
 
-def test_file_excluded():
+def test_file_excluded_file():
     check_base = create_base()
     check_base.excluded_file_list = ["excluded.txt"]
     assert check_base._file_excluded("excluded.txt")
+
+
+def test_file_excluded_path():
+    check_base = create_base()
+    check_base.excluded_file_list = ["/i/am/a/"]
+    assert check_base._file_excluded("/i/am/a/test/excluded.txt")
 
 
 def test_file_changed():
