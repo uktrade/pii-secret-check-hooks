@@ -43,7 +43,7 @@ def test_log_updated(load_json):
     check_base = CheckFileBaseTest(
         check_name="test_base",
     )
-    assert "tests/assets/test.txt" in check_base.log_data["files"]
+    assert not check_base.log_data["files"]
 
     output_file_path = f"tests/check_output_{str(time.time())}.txt"
     check_base.log_path = output_file_path
