@@ -12,7 +12,7 @@ def main(argv=None):
     parser.add_argument(
         "exclude",
         nargs="?",
-        default="pii-secret-exclude.txt",
+        default=".pii-secret-exclude.txt",
         help="Exclude file path",
     )
     args = parser.parse_args(argv)

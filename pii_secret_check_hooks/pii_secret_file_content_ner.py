@@ -22,13 +22,13 @@ def main(argv=None):
     parser.add_argument(
         "--exclude",
         nargs="?",
-        default="pii-secret-exclude.txt",
+        default=".pii-secret-exclude.txt",
         help="Exclude file path",
     )
     parser.add_argument(
         "--ner_exclude",
         nargs="?",
-        default="pii-ner-exclude.txt",
+        default=".pii-ner-exclude.txt",
         help="Named Entity Recognition exclude file path. One per line.",
     )
     parser.add_argument(
