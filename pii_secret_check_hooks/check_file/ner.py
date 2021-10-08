@@ -39,10 +39,12 @@ class CheckForNER(CheckFileBase):
     def __init__(
         self,
         allow_changed_lines=False,
-        excluded_file_list=[],
-        excluded_ner_entity_list=[],
+        excluded_file_list=None,
+        excluded_ner_entity_list=None,
         ner_output_file=None,
     ):
+        excluded_file_list = [] if excluded_file_list is None else excluded_file_list
+        excluded_ner_entity_list = [] if excluded_ner_entity_list is None else excluded_ner_entity_list
         self.excluded_ner_entity_list = excluded_ner_entity_list
         self.ner_output_file = ner_output_file
         self.entity_list = []
