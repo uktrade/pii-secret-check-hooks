@@ -19,7 +19,8 @@ def expected_kwargs():
         ".pii-secret-hook/file_content/pii-secret-log",
         ".pii-secret-hook/ner/pii-secret-log",
         "pii-secret-exclude.txt",
-        "pii-ner-exclude.txt"
+        "pii-ner-exclude.txt",
+        "pii-custom-regex.txt",
     ]
 
 
