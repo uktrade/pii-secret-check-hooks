@@ -10,9 +10,9 @@ Make sure you run:
 
 ## Setting up
  * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
- * Add a `.pii-secret-exclude` file if needed (explanation below)
- * Add a `.pii-custom-regex` file if needed (explanation below)
- * Add a `.pii-ner-exclude` file if needed (explanation below)
+ * Add a `pii-secret-exclude` file if needed (explanation below)
+ * Add a `pii-custom-regex` file if needed (explanation below)
+ * Add a `pii-ner-exclude` file if needed (explanation below)
 
 ## Tracking exclusions
 A file is written to, which should be included in committed files, which records a hash of

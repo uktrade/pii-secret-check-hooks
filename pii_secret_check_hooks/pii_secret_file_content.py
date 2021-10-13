@@ -20,13 +20,13 @@ def main(argv=None):
     parser.add_argument(
         "--exclude",
         nargs="?",
-        default=".pii-secret-exclude.txt",
+        default="pii-secret-exclude.txt",
         help="Exclude file path",
     )
     parser.add_argument(
         "--regex_file",
         nargs="?",
-        default=".pii-custom-regex.txt",
+        default="pii-custom-regex.txt",
         help="File with custom regex (one per line)",
     )
     args = parser.parse_args(argv)
