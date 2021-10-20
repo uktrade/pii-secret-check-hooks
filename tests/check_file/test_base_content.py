@@ -1,7 +1,11 @@
+import functools
+import io
 import hashlib
 import json
 import os
-import time
+import pathlib
+
+import pytest
 from unittest.mock import MagicMock, patch
 
 from pii_secret_check_hooks.check_file.base_content_check import (
@@ -31,28 +35,57 @@ def create_base():
     return check_base
 
 
-@patch('pii_secret_check_hooks.check_file.base_content_check.load_json')
-def test_log_updated(load_json):
-    load_json.return_value = {
+def remove_log(test_log_dir):
+    try:
+        os.remove(pathlib.Path(test_log_dir) / "pii-secret-log")
+    except FileNotFoundError:
+        pass
+    os.rmdir(test_log_dir)
+
+
+@pytest.fixture
+def json_log_data():
+    return {
         "files": {
             "tests/assets/test.txt": {
                 "hash": "291f89e4b12779a5cbef6f508f5e593dea9dd9b4"
             }
         }
     }
-    check_base = CheckFileBaseTest(
-        check_name="test_base",
-    )
-    assert not check_base.log_data["files"]
 
-    output_file_path = f"tests/check_output_{str(time.time())}.txt"
-    check_base.log_path = output_file_path
+
+@pytest.fixture
+def json_log_data_content(json_log_data):
+    return io.StringIO(json.dumps(json_log_data))
+
+
+@pytest.fixture(scope="module")
+def log_dir(request):
+    test_log_dir = ".pii-secret-hook/test_base"
+    request.addfinalizer(functools.partial(remove_log, test_log_dir))
+    return test_log_dir
+
+
+def test_log_pre_populated(json_log_data_content, log_dir):
+    with patch(
+            "pii_secret_check_hooks.check_file.base_content_check.open",
+            return_value=json_log_data_content,
+            create=True
+    ):
+        check_base = CheckFileBaseTest(check_name="test_base")
+        assert os.stat(log_dir)
+        assert check_base.log_path == f"{log_dir}/pii-secret-log"
+        assert "tests/assets/test.txt" in check_base.log_data["files"]
+        assert "hash" in check_base.log_data["files"]["tests/assets/test.txt"]
+
+
+def test_log_updated(json_log_data, log_dir):
+    check_base = CheckFileBaseTest(check_name="test_base")
+    check_base.log_data = json_log_data
     check_base._write_log()
-
-    with open(output_file_path, 'r') as json_file:
-        assert "tests/assets/test.txt" in load_json(json_file)["files"]
-
-    os.remove(output_file_path)
+    with open(check_base.log_path, 'r') as json_file:
+        assert check_base.log_path == f"{log_dir}/pii-secret-log"
+        assert "tests/assets/test.txt" in load_json(json_file.name)["files"]
 
 
 def test_create_file_hash():
