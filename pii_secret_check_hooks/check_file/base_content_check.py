@@ -41,9 +41,8 @@ class CheckFileBase(ABC):
         allow_changed_lines=False,
         excluded_file_list=None,
     ):
-        excluded_file_list = [] if excluded_file_list is None else excluded_file_list
+        self.excluded_file_list = [] if excluded_file_list is None else excluded_file_list
         self.allow_changed_lines = allow_changed_lines
-        self.excluded_file_list = excluded_file_list
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
         self.debug = True
