@@ -18,19 +18,20 @@ Make sure you run:
 A file is written to, which should be included in committed files, which records a hash of
 files checked by the hooks.
  
-## Excluding files with .pii-secret-exclude
+## Excluding files with `pii-secret-exclude` file.
 In order to exclude files from the checks, add them to this file. HOWEVER, you should 
 heavily favour excluding lines using `/PS-IGNORE`, rather than files.
 
-## Adding your own regular expressions with .pii-custom-regex
+## Adding your own regular expressions with `pii-custom-regex` file.
 Add our own regexes for secret or PII identification. Each one should be added one per line in the format:
 
     name=regex
 
 Regexes used should be Python compatible and should not use start and end markers.
 
-## Excluding false positives from the NER hook
-Add your own list of entities that should be excluded in the .pii-custom-ner-exclude file.
+## Excluding false positives from the NER hook with `pii-custom-ner-exclude` file.
+Add your own list of entities that should be excluded in the
+`pii-custom-ner-exclude` file.
 
 ## Generating an exclude file with a list of NER entities to exclude
 If you want to output NER entities into a single file (very useful when setting up a repo), you can 
