@@ -50,7 +50,7 @@ Run the following command to identify issues in your repo.
 
 If PII or a secret is found is a false positive, add `/PS-IGNORE` (put this in a 
 comment if needed) to any affected lines or, if you are certain a file can be 
-excluded and will not change in the future, add it to the `.pii-secret-exclude` file.
+excluded and will not change in the future, add it to the `pii-secret-exclude` file.
 
 ## When committing
 This logic should be run on every commit. When you find a false positive. Add 
