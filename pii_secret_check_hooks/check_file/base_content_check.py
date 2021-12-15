@@ -39,10 +39,10 @@ class CheckFileBase(ABC):
         self,
         check_name,
         allow_changed_lines=False,
-        excluded_file_list=[],
+        excluded_file_list=None,
     ):
+        self.excluded_file_list = [] if excluded_file_list is None else excluded_file_list
         self.allow_changed_lines = allow_changed_lines
-        self.excluded_file_list = excluded_file_list
         self.log_path = f".pii-secret-hook/{check_name}/pii-secret-log"
         self.log_data = self._get_empty_log()
         self.debug = True
@@ -155,22 +155,12 @@ class CheckFileBase(ABC):
 
     # Should only be run if file content has changed
     def _issue_found_in_file_content(self, file_object) -> bool:
-        found_issue = False
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1
-            if LINE_MARKER in line and self.allow_changed_lines:
-                print_warning(
-                    f"Line {self.current_line_num}. {line.strip()}"
-                )
-                print_error(
-                    "Line marked for exclusion, the line has changed since it "
-                    "was last checked.\nPlease manually check it does not "
-                    "contain sensitive information",
-                )
-            elif self.line_has_issue(line.strip()):
-                found_issue = True
+            if self.line_has_issue(line.strip()):
+                return True
 
-        return found_issue
+        return False
 
     @abstractmethod
     def line_has_issue(self, line):

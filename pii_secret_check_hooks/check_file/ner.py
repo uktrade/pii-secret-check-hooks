@@ -39,18 +39,19 @@ class CheckForNER(CheckFileBase):
     def __init__(
         self,
         allow_changed_lines=False,
-        excluded_file_list=[],
-        excluded_ner_entity_list=[],
+        excluded_file_list=None,
+        excluded_ner_entity_list=None,
         ner_output_file=None,
     ):
-        self.excluded_ner_entity_list = excluded_ner_entity_list
+        self.excluded_file_list = [] if excluded_file_list is None else excluded_file_list
+        self.excluded_ner_entity_list = [] if excluded_ner_entity_list is None else excluded_ner_entity_list
         self.ner_output_file = ner_output_file
         self.entity_list = []
 
         super(CheckForNER, self).__init__(
             check_name="ner",
             allow_changed_lines=allow_changed_lines,
-            excluded_file_list=excluded_file_list,
+            excluded_file_list=self.excluded_file_list,
         )
 
     def line_has_issue(self, line) -> bool:

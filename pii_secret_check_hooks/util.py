@@ -38,6 +38,7 @@ def get_excluded_filenames(file_path):
         ".pii-secret-hook/ner/pii-secret-log",
         "pii-secret-exclude.txt",
         "pii-ner-exclude.txt",
+        "pii-custom-regex.txt",
     ]
     return excluded + _get_file_content_as_list(file_path, "exclude")
 

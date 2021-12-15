@@ -14,7 +14,8 @@ def _detect_match_against_filename(filename, filename_regex):
             return regex
 
 
-def check_file_names(filenames, excluded_filenames=[]):
+def check_file_names(filenames, excluded_filenames=None):
+    excluded_filenames = [] if excluded_filenames is None else excluded_filenames
     found_issue = False
     for filename in filenames:
         if filename not in excluded_filenames:

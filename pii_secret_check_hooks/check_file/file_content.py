@@ -42,15 +42,15 @@ class CheckFileContent(CheckFileBase):
     def __init__(
         self,
         allow_changed_lines=False,
-        excluded_file_list=[],
-        custom_regex_list=[],
+        excluded_file_list=None,
+        custom_regex_list=None,
     ):
-        self.custom_regex_list = custom_regex_list
-
+        self.excluded_file_list = [] if excluded_file_list is None else excluded_file_list
+        self.custom_regex_list = [] if custom_regex_list is None else custom_regex_list
         super(CheckFileContent, self).__init__(
             check_name="file_content",
             allow_changed_lines=allow_changed_lines,
-            excluded_file_list=excluded_file_list,
+            excluded_file_list=self.excluded_file_list,
         )
 
     def _entropy_check(self, line):
