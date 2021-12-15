@@ -157,7 +157,9 @@ class CheckFileBase(ABC):
     def _issue_found_in_file_content(self, file_object) -> bool:
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1
-            if self.line_has_issue(line.strip()):
+            if LINE_MARKER in line and self.allow_changed_lines:
+                continue
+            elif self.line_has_issue(line.strip()):
                 return True
 
         return False
