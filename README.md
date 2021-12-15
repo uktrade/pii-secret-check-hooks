@@ -10,28 +10,28 @@ Make sure you run:
 
 ## Setting up
  * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
- * Add a `pii-secret-exclude` file if needed (explanation below)
- * Add a `pii-custom-regex` file if needed (explanation below)
- * Add a `pii-ner-exclude` file if needed (explanation below)
+ * Add a `pii-secret-exclude.txt` file if needed (explanation below)
+ * Add a `pii-custom-regex.txt` file if needed (explanation below)
+ * Add a `pii-ner-exclude.txt` file if needed (explanation below)
 
 ## Tracking exclusions
 A file is written to, which should be included in committed files, which records a hash of
 files checked by the hooks.
  
-## Excluding files with `pii-secret-exclude` file.
+## Excluding files with `pii-secret-exclude.txt` file.
 In order to exclude files from the checks, add them to this file. HOWEVER, you should 
 heavily favour excluding lines using `/PS-IGNORE`, rather than files.
 
-## Adding your own regular expressions with `pii-custom-regex` file.
+## Adding your own regular expressions with `pii-custom-regex.txt` file.
 Add our own regexes for secret or PII identification. Each one should be added one per line in the format:
 
     name=regex
 
 Regexes used should be Python compatible and should not use start and end markers.
 
-## Excluding false positives from the NER hook with `pii-custom-ner-exclude` file.
+## Excluding false positives from the NER hook with `pii-custom-ner-exclude.txt` file.
 Add your own list of entities that should be excluded in the
-`pii-custom-ner-exclude` file.
+`pii-custom-ner-exclude.txt` file.
 
 ## Generating an exclude file with a list of NER entities to exclude
 If you want to output NER entities into a single file (very useful when setting up a repo), you can 
@@ -50,7 +50,7 @@ Run the following command to identify issues in your repo.
 
 If PII or a secret is found is a false positive, add `/PS-IGNORE` (put this in a 
 comment if needed) to any affected lines or, if you are certain a file can be 
-excluded and will not change in the future, add it to the `pii-secret-exclude` file.
+excluded and will not change in the future, add it to the `pii-secret-exclude.txt` file.
 
 ## When committing
 This logic should be run on every commit. When you find a false positive. Add 
