@@ -155,14 +155,17 @@ class CheckFileBase(ABC):
 
     # Should only be run if file content has changed
     def _issue_found_in_file_content(self, file_object) -> bool:
+        found_issue = False
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1
             if LINE_MARKER in line and self.allow_changed_lines:
                 continue
             elif self.line_has_issue(line.strip()):
-                return True
+                # We don't want to return here as otherwise
+                # we won't get all issues output
+                found_issue = True
 
-        return False
+        return found_issue
 
     @abstractmethod
     def line_has_issue(self, line):
