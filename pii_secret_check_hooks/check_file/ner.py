@@ -62,7 +62,7 @@ class CheckForNER(CheckFileBase):
                 if (
                     ent.label_ not in NER_IGNORE and
                     ent.text not in NER_EXCLUDE and
-                    ent.text.lower() not in self.excluded_ner_entity_list
+                    ent.text.lower().strip() not in self.excluded_ner_entity_list
                 ):
                     print_warning(
                         f"Line {self.current_line_num}. please check '{ent.text}' - {ent.label_} - {str(spacy.explain(ent.label_))}",
