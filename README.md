@@ -63,6 +63,11 @@ In order to run the latest version of these hooks run:
 
     pre-commit autoupdate
 
+## If the hooks pass but the commit fails
+Try running:
+
+    pre-commit gc & pre-commit clean
+
 ## TODO
  * Check for duplication before adding to NER exclude file
  * Log file is overwritten and loses content when application is executed
