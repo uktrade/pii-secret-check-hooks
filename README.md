@@ -66,7 +66,7 @@ In order to run the latest version of these hooks run:
 ## If the hooks pass but the commit fails
 Try running:
 
-    pre-commit gc & pre-commit clean
+    pre-commit gc; pre-commit clean
 
 ## TODO
  * Check for duplication before adding to NER exclude file
