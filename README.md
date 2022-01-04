@@ -29,9 +29,9 @@ Add our own regexes for secret or PII identification. Each one should be added o
 
 Regexes used should be Python compatible and should not use start and end markers.
 
-## Excluding false positives from the NER hook with `pii-custom-ner-exclude.txt` file.
+## Excluding false positives from the NER hook with `pii-ner-exclude.txt` file.
 Add your own list of entities that should be excluded in the
-`pii-custom-ner-exclude.txt` file.
+`pii-ner-exclude.txt` file.
 
 ## Generating an exclude file with a list of NER entities to exclude
 If you want to output NER entities into a single file (very useful when setting up a repo), you can 
