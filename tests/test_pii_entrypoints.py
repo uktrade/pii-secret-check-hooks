@@ -46,7 +46,7 @@ def test_pii_secret_file_content_defaults(monkeypatch, process_files, get_exclud
 
 
 def test_pii_secret_file_content_ner_defaults(monkeypatch, process_files, get_excluded_filenames):
-    get_excluded_ner = mock.Mock()
+    get_excluded_ner = mock.Mock(return_value=[])
     monkeypatch.setattr(pii_secret_file_content_ner, "get_excluded_filenames", get_excluded_filenames)
     monkeypatch.setattr(pii_secret_file_content_ner, "get_excluded_ner", get_excluded_ner)
     monkeypatch.setattr(pii_secret_file_content_ner.CheckForNER, "process_files", process_files)
