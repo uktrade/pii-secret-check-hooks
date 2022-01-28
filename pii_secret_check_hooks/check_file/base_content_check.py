@@ -113,7 +113,7 @@ class CheckFileBase(ABC):
                         f"{filename}",
                     )
                     if self._file_changed(f):
-                        if self._issue_found_in_file_content(f):
+                        if self._issue_found_in_file_content(f, filename):
                             return True
                         else:
                             # If no issue was found, create and save file hash
@@ -154,7 +154,7 @@ class CheckFileBase(ABC):
         return found_issues
 
     # Should only be run if file content has changed
-    def _issue_found_in_file_content(self, file_object) -> bool:
+    def _issue_found_in_file_content(self, file_object, filename) -> bool:
         found_issue = False
         for i, line in enumerate(file_object):
             self.current_line_num = i + 1

@@ -168,7 +168,7 @@ def test_process_file_content_line_with_marker_file_changed_allow_changed_lines(
     mock = MagicMock()
     mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
 
-    assert not check_base._issue_found_in_file_content(mock)
+    assert not check_base._issue_found_in_file_content(mock, "example.txt")
 
 
 def test_process_file_content_line_with_marker_file_changed_disallow_changed_lines():
@@ -182,7 +182,7 @@ def test_process_file_content_line_with_marker_file_changed_disallow_changed_lin
     mock = MagicMock()
     mock.__iter__.return_value = ["I am a test. #PS-IGNORE", "So am I.", ]
 
-    assert check_base._issue_found_in_file_content(mock)
+    assert check_base._issue_found_in_file_content(mock, "example.txt")
 
 
 def test_issue_found_in_file_creates_log_for_no_issue_files():
