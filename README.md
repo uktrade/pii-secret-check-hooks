@@ -9,6 +9,7 @@ Make sure you run:
     pre-commit autoupdate
 
 ## Setting up
+ * Add `.pii-secret-hook` to your .gitignore
  * Copy `.pre-commit-config.yaml` to your repo, or if using pre-commit already, add the hooks from this project to your existing file
  * Add a `pii-secret-exclude.txt` file if needed (explanation below)
  * Add a `pii-custom-regex.txt` file if needed (explanation below)
