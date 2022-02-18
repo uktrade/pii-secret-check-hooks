@@ -1,5 +1,4 @@
 import re
-import en_core_web_sm
 
 from rich.console import Console
 
@@ -19,12 +18,6 @@ from pii_secret_check_hooks.util import (
     print_error,
     print_warning,
 )
-
-nlp = en_core_web_sm.load()
-
-
-class LineUpdatedException(Exception):
-    pass
 
 
 console = Console()

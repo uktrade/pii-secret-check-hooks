@@ -23,13 +23,6 @@ from pii_secret_check_hooks.check_file.base_content_check import (
 nlp = en_core_web_sm.load()
 PYTHON_CODE_SUFFIX = ".py"
 
-class LineUpdatedException(Exception):
-    pass
-
-
-class LineHashChangedException(Exception):
-    pass
-
 
 class CheckForNER(CheckFileBase):
     replace_lines = []
