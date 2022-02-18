@@ -27,10 +27,6 @@ class LineUpdatedException(Exception):
     pass
 
 
-class NoExcludeFilePassedException(Exception):
-    pass
-
-
 console = Console()
 
 

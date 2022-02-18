@@ -23,10 +23,6 @@ class FoundSensitiveException(Exception):
     pass
 
 
-class NoExcludeFilePassedException(Exception):
-    pass
-
-
 class LineHashChangedException(Exception):
     pass
 

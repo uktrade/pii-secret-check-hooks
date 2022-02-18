@@ -47,7 +47,7 @@ def main(argv=None):
     )
 
     if ner_output_file:
-        print_info(f"Exclude file '{ner_output_file}' provided")
+        print_info(f"NER excludes will be appended to '{ner_output_file}'")
 
     process_ner_file = CheckForNER(
         allow_changed_lines=True,
