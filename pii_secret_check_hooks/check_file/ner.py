@@ -31,10 +31,6 @@ class LineHashChangedException(Exception):
     pass
 
 
-class NoExcludeFilePassedException(Exception):
-    pass
-
-
 class CheckForNER(CheckFileBase):
     replace_lines = []
     current_line_num = 0
@@ -120,13 +116,14 @@ class CheckForNER(CheckFileBase):
             print_info("No NER output file provided")
 
     def _generate_ner_file(self) -> None:
-        if not self.ner_output_file:
-            raise NoExcludeFilePassedException()
+        # The pre-commit hook invokes this program multiple times if there are
+        # many files. Use append mode so that we don't overwrite output from
+        # other invocations. The user is responsible for deleting the file
+        # between runs.
+        if not self.entity_list:
+            return
 
-        print_info(
-            f"Outputting NER results to NER file '{self.ner_output_file}'",
-        )
-        with open(self.ner_output_file, "w") as exclude_file:
+        with open(self.ner_output_file, "a") as exclude_file:
             for entity in self.entity_list:
                 exclude_file.write(f"{entity}\n")
 

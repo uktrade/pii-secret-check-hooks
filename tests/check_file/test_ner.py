@@ -32,6 +32,18 @@ def test_generate_ner_file():
     os.remove(test_output_file_path)
 
 
+def test_generate_ner_file_appends_content(tmp_path):
+    dest = tmp_path / "test_generate_ner_file_appends_content.txt"
+    dest.write_text("Old foo\n")
+
+    checker = CheckForNER(ner_output_file=dest)
+    checker.entity_list = ["New foo"]
+    checker._generate_ner_file()
+
+    # The new content is added on the end of the existing content.
+    assert dest.read_text() == "Old foo\nNew foo\n"
+
+
 def test_ner_python_scanner_named_entity_as_variable():
     # The PII is a Python variable, not an issue. Obviously a `Buxton` variable
     # is bad and weird, but in practice we get false positives for _anything_
