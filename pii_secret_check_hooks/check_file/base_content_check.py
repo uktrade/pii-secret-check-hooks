@@ -14,17 +14,7 @@ from pii_secret_check_hooks.config import (
 from pii_secret_check_hooks.util import (
     print_error,
     print_info,
-    print_debug,
-    print_warning,
 )
-
-
-class FoundSensitiveException(Exception):
-    pass
-
-
-class LineHashChangedException(Exception):
-    pass
 
 
 class CheckFileBase(ABC):
@@ -105,11 +95,9 @@ class CheckFileBase(ABC):
             if filename not in self.excluded_file_list:
                 self.current_file = filename
                 with open(filename, "r+") as f:
-                    print_info(
-                        f"{filename}",
-                    )
                     if self._file_changed(f):
                         if self._issue_found_in_file_content(f, filename):
+                            print_info(f"{filename}")
                             return True
                         else:
                             # If no issue was found, create and save file hash
@@ -136,6 +124,9 @@ class CheckFileBase(ABC):
         log_file.close()
 
     def process_files(self, filenames) -> bool:
+        filenames = list(filenames)
+        print_info(f"Number of files for processing: {len(filenames)}")
+
         found_issues = False
 
         for filename in filenames:
