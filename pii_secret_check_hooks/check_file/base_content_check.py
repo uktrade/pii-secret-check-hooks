@@ -119,9 +119,9 @@ class CheckFileBase(ABC):
             return True
 
     def _write_log(self):
-        log_file = open(self.log_path, "w")
-        log_file.write(json.dumps(self.log_data))
-        log_file.close()
+        with open(self.log_path, "w") as fh:
+            # Using indent for nicer diffs when contents change.
+            json.dump(self.log_data, fh, indent=2)
 
     def process_files(self, filenames) -> bool:
         filenames = list(filenames)
