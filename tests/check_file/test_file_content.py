@@ -49,7 +49,9 @@ def test_pii_regex():
 def test_custom_regex_checks():
     check_file_content = CheckFileContent(
         excluded_file_list=None,
-        custom_regex_list=[r"dog name=(\s*)dog(\s*)name(\s*)"],
+        custom_regex_list=[
+            r"dog name=(\s*)dog(\s*)name(\s*)"
+        ],
     )
 
     assert check_file_content._custom_regex_checks(
