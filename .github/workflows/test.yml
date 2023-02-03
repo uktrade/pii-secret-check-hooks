@@ -3,12 +3,12 @@ name: Run tests
 on:
   push:
     branches:
-      - "main"
+      - "main" # committing directly to main
   pull_request:
     branches:
-      - "main"
+      - "main" # merging into main
   schedule:
-    - cron:  '15 4 * * 0'
+    - cron:  '15 4 * * 0' # also run weekly
 
 jobs:
   test:
@@ -29,8 +29,8 @@ jobs:
         run: python -c "import sys; print(sys.version)"
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pipenv
-          pipenv install --dev
+          python -m pip3 install --upgrade pip
+          pip3 install pipenv
+          pipenv install --dev --python ${ which python3.9 }
       - name: Run tests
         run: pipenv run pytest
