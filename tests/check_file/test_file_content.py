@@ -50,7 +50,7 @@ def test_custom_regex_checks():
     check_file_content = CheckFileContent(
         excluded_file_list=None,
         custom_regex_list=[
-            "dog name=(\s*)dog(\s*)name(\s*)"
+            r"dog name=(\s*)dog(\s*)name(\s*)"
         ],
     )
 
