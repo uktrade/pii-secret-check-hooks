@@ -75,8 +75,12 @@ class CheckFileBase(ABC):
     def _file_excluded(self, filename) -> bool:
         file_path = PurePath(filename)
         for excluded_path_or_file in self.excluded_file_list:
-            if file_path.is_relative_to(excluded_path_or_file):
+            # Same as is_relative_to(..), but compatible with Python>=3.7.
+            try:
+                file_path.relative_to(excluded_path_or_file)
                 return True
+            except ValueError:
+                pass
 
         return False
 
