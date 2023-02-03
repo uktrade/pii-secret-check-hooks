@@ -31,8 +31,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
-          pipenv lock --python $(which ${{ matrix.python-version }})
+          pipenv lock --python /usr/bin/python${{ matrix.python-version }}
       - name: Install dependencies
-        run: pipenv install --dev --python $(which ${{ matrix.python-version }})
+        run: pipenv install --dev --python /usr/bin/python${{ matrix.python-version }}
       - name: Run tests
         run: pipenv run pytest
