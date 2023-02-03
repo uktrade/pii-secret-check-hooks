@@ -29,8 +29,8 @@ jobs:
         run: python -c "import sys; print(sys.version)"
       - name: Install dependencies
         run: |
-          python -m pip3 install --upgrade pip
-          pip3 install pipenv
+          python -m pip install --upgrade pip
+          pip install pipenv
           pipenv install --dev --python ${ which python3.9 }
       - name: Run tests
         run: pipenv run pytest
