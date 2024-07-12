@@ -30,8 +30,8 @@ setup(
         "truffleHog",
         "pyyaml",
         "rich",
-        "spacy >=3.5,<3.6",
-        "en_core_web_sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz",
+        "spacy >=3.7.2,<3.8.0",
+        "en_core_web_sm@https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz",
     ],
     tests_require=["pytest"],
 )
