@@ -33,9 +33,11 @@ class CheckFileContent(CheckFileBase):
         allow_changed_lines=False,
         excluded_file_list=None,
         custom_regex_list=None,
+        ignore_strings_list=None,
     ):
         self.excluded_file_list = [] if excluded_file_list is None else excluded_file_list
         self.custom_regex_list = [] if custom_regex_list is None else custom_regex_list
+        self.ignore_strings_list = [] if ignore_strings_list is None else ignore_strings_list
         super(CheckFileContent, self).__init__(
             check_name="file_content",
             allow_changed_lines=allow_changed_lines,
@@ -92,7 +94,13 @@ class CheckFileContent(CheckFileBase):
                 )
                 return None
 
+    def _strip_ignore_strings(self, line):
+        for ignore_string in self.ignore_strings_list:
+            line = line.replace(ignore_string, "")
+        return line
+
     def line_has_issue(self, line) -> bool:
+        line = self._strip_ignore_strings(line)
         trufflehog_check = self._trufflehog_check(line)
         if trufflehog_check:
             print_warning(
