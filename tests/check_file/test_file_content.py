@@ -46,6 +46,26 @@ def test_pii_regex():
     )
 
 
+def test_pii_regex_ignore_strings():
+    check_file_content = CheckFileContent(
+        excluded_file_list=None,
+        custom_regex_list=None,
+    )
+
+    assert check_file_content._pii_regex(
+        "I am a line, with Buckingham Palace's postcode - F680 1AA"
+    )
+
+    check_file_content = CheckFileContent(
+        excluded_file_list=None,
+        custom_regex_list=None,
+        ignore_string_list=["F680"],
+    )
+    assert not check_file_content._pii_regex(
+        "I am a line, with Buckingham Palace's postcode - F680 1AA"
+    )
+
+
 def test_custom_regex_checks():
     check_file_content = CheckFileContent(
         excluded_file_list=None,

@@ -3,6 +3,7 @@ import argparse
 from pii_secret_check_hooks.util import (
     get_regex_from_file,
     get_excluded_filenames,
+    get_ignore_strings,
 )
 from pii_secret_check_hooks.check_file.file_content import (
     CheckFileContent,
@@ -24,6 +25,12 @@ def main(argv=None):
         help="Exclude file path",
     )
     parser.add_argument(
+        "--ignore-strings",
+        nargs="?",
+        default="pii-ignore-strings.txt",
+        help="Ignore strings file path",
+    )
+    parser.add_argument(
         "--regex_file",
         nargs="?",
         default="pii-custom-regex.txt",
@@ -31,6 +38,7 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
     excluded_filenames = get_excluded_filenames(args.exclude)
+    ignore_strings_list = get_ignore_strings(args.ignore_strings)
     custom_regex_list = get_regex_from_file(args.regex_file)
 
     # Exclude custom regex file
@@ -40,6 +48,7 @@ def main(argv=None):
         allow_changed_lines=True,
         excluded_file_list=excluded_filenames,
         custom_regex_list=custom_regex_list,
+        ignore_strings_list=ignore_strings_list,
     )
 
     if process_file_content.process_files(args.filenames):

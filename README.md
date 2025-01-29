@@ -30,6 +30,15 @@ Add our own regexes for secret or PII identification. Each one should be added o
 
 Regexes used should be Python compatible and should not use start and end markers.
 
+## Excluding false positives from the file content hook with `pii-ignore-strings.txt` file.
+Add your own list of strings to ignore from the file content check in the `pii-ignore-strings.txt` file.
+
+Example pii-ignore-strings.txt:
+```
+F680
+f680
+```
+
 ## Excluding false positives from the NER hook with `pii-ner-exclude.txt` file.
 Add your own list of entities that should be excluded in the
 `pii-ner-exclude.txt` file.
